@@ -48,6 +48,24 @@ const createAcademicSemesterIntoDB = async (payload: TAcademicSemester) => {
 const getAllAcademicSemestersFromDB = async (
   query: Record<string, unknown>,
 ) => {
+  // Get current month name (e.g., "March")
+  const monthNames = [
+    'January',
+    'February',
+    'March',
+    'April',
+    'May',
+    'June',
+    'July',
+    'August',
+    'September',
+    'October',
+    'November',
+    'December',
+  ];
+  const currentMonthName = monthNames[new Date().getMonth()];
+
+  // First get all semesters that match other query parameters
   const academicSemesterQuery = new QueryBuilder(AcademicSemester.find(), query)
     .search(AcademicSemesterSearchableFields)
     .filter()
@@ -55,12 +73,30 @@ const getAllAcademicSemestersFromDB = async (
     .paginate()
     .fields();
 
-  const result = await academicSemesterQuery.modelQuery;
-  const meta = await academicSemesterQuery.countTotal();
+  let result = await academicSemesterQuery.modelQuery;
+
+  // Filter on client side to ensure proper month comparison
+  result = result.filter((semester) => {
+    const startIndex = monthNames.indexOf(semester.startMonth);
+    const endIndex = monthNames.indexOf(semester.endMonth);
+    const currentIndex = monthNames.indexOf(currentMonthName);
+    return currentIndex >= startIndex && currentIndex <= endIndex;
+  });
+
+  // Recalculate meta data based on filtered results
+  const total = result.length;
+  const page = Number(query?.page) || 1;
+  const limit = Number(query?.limit) || 10;
+  const totalPage = Math.ceil(total / limit);
 
   return {
-    meta,
-    result,
+    meta: {
+      page,
+      limit,
+      total,
+      totalPage,
+    },
+    data: result,
   };
 };
 
