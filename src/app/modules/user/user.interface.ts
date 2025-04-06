@@ -6,7 +6,9 @@ export type TUserRoles =
   | 'admin'
   | 'student'
   | 'faculty'
-  | 'instructor';
+  | 'instructor'
+  | 'admitted-student'
+  ;
 
 export type Roles = TUserRoles[];
 export interface TUser {

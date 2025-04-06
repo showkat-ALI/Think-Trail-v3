@@ -14,17 +14,17 @@ const createCourse = catchAsync(async (req, res) => {
   });
 });
 
-// const getAllCourses = catchAsync(async (req, res) => {
-//   const result = await CourseServices.getAllCoursesFromDB(req.query);
+const getAllCourses = catchAsync(async (req, res) => {
+  const result = await CourseServices.getAllCoursesFromDB();
 
-//   sendResponse(res, {
-//     statusCode: httpStatus.OK,
-//     success: true,
-//     message: 'Course are retrieved successfully',
-//     meta: result.meta,
-//     data: result.result,
-//   });
-// });
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Course are retrieved successfully',
+
+    data: result,
+  });
+});
 
 const getSingleCourse = catchAsync(async (req, res) => {
   const { id } = req.params;
@@ -33,7 +33,29 @@ const getSingleCourse = catchAsync(async (req, res) => {
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
-    message: 'Course is retrieved succesfully',
+    message: 'Course is retrieved successfully',
+    data: result,
+  });
+});
+const acceptAllAdmissionRequest = catchAsync(async (req, res) => {
+  const { id } = req.params;
+  const result = await CourseServices.acceptAdmissionRequestDB(id);
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Course is retrieved successfully',
+    data: result,
+  });
+});
+const rejectAllAdmissionRequest = catchAsync(async (req, res) => {
+  const { id } = req.params;
+  const result = await CourseServices.rejectAdmissionRequestDB(id);
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Course is retrieved successfully',
     data: result,
   });
 });
@@ -41,5 +63,7 @@ const getSingleCourse = catchAsync(async (req, res) => {
 export const CourseControllers = {
   createCourse,
   getSingleCourse,
-  // getAllCourses,
+  getAllCourses,
+  acceptAllAdmissionRequest,
+  rejectAllAdmissionRequest
 };

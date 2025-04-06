@@ -16,6 +16,7 @@ import { AssignmentRoutes } from '../modules/Assignments/assingments.route';
 import { QuizRoutes } from '../modules/Quiz/quiz.route';
 import { ModuleRouters } from '../modules/Module/module.route';
 import { ModuleVideoRoutes } from '../modules/ModuleData/module.route';
+import {  AdmissionRoutes } from '../modules/Admission/module.route';
 
 const router = Router();
 
@@ -55,6 +56,10 @@ const moduleRoutes = [
   {
     path: '/module',
     route: ModuleRouters,
+  },
+  {
+    path: '/admission',
+    route: AdmissionRoutes,
   },
   {
     path: '/semester-registrations',

@@ -2,16 +2,11 @@ import { Schema, model } from 'mongoose';
 import { TCourse } from './module.interface';
 
 const courseSchema = new Schema<TCourse>({
-  semester: {
-    type: Schema.Types.ObjectId,
-    ref: 'AcademicSemester',
-  },
-  program: {
-    type: Schema.Types.ObjectId,
-    ref: 'AcademicDepartment',
-  },
+ program: { type: Schema.Types.ObjectId, ref: 'AcademicDepartment' },
+  semester: { type: Schema.Types.ObjectId, ref: 'AcademicSemester' },
   id: {
-    type: String,
+    type: Schema.Types.ObjectId,
+    ref: 'User',
   },
   email: {
     type: String,
@@ -24,6 +19,7 @@ const courseSchema = new Schema<TCourse>({
     type: [String], // Assuming Roles[] is an array of strings
     required: true, // Set to true if roles are mandatory
   },
+  status:{ type: String}
 });
 
 export const Admission = model<TCourse>('Admission', courseSchema);

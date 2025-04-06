@@ -14,15 +14,27 @@ router.post(
 );
 
 router.get(
-  '/get-course-module/:id',
+  '/my-admission/:id',
   auth(['admin', 'faculty', 'instructor', 'student', 'superAdmin']),
   CourseControllers.getSingleCourse,
 );
 
-// router.get(
-//   '/',
-//   auth(['admin', 'faculty', 'instructor', 'student', 'superAdmin']),
-//   CourseControllers.getAllCourses,
-// );
+router.get(
+  '/get-all-admission-request',
+  auth(['admin', 'faculty', 'instructor', 'student', 'superAdmin']),
+  CourseControllers.getAllCourses,
+);
+router.post(
+  '/accept-all-admission-request/:id',
+  auth(['admin', 'faculty', 'instructor', 'student', 'superAdmin']),
+  CourseControllers.acceptAllAdmissionRequest,
+);
+router.post(
+  '/reject-all-admission-request/:id',
+  auth(['admin', 'faculty', 'instructor', 'student', 'superAdmin']),
+  CourseControllers.rejectAllAdmissionRequest,
+);
 
-export const ModuleRouters = router;
+
+
+export const AdmissionRoutes = router;

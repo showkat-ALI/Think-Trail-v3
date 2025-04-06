@@ -7,7 +7,10 @@ const createCourseValidationSchema = z.object({
     id: z.string(),
     email: z.string().email(), // Validates email format
     isDeleted: z.boolean().optional(), // Optional field
-    roles: z.array(z.string()), // Validates roles as an array of strings
+    roles: z.array(z.string()), 
+    status: z.string().optional(), // Assuming status is a string
+    agreeTerms: z.boolean(), // Validates if terms are agreed to    
+    // Validates roles as an array of strings
   }),
 });
 const updatePreRequisiteCourseValidationSchema = z.object({

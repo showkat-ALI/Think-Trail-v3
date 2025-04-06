@@ -11,9 +11,10 @@ export type TCourse = {
   program: Types.ObjectId;
   agreeTerms: boolean;
   email: string;
-  id: string;
+  id: Types.ObjectId;
   roles: Roles[];
   isDeleted: boolean;
+  status: string;
 };
 
 export type TCoursefaculty = {

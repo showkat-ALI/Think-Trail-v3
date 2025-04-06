@@ -4,6 +4,7 @@ import AppError from '../../errors/AppError';
 // import { CourseSearchableFields } from './Module.constant';
 import { TCourse } from './module.interface';
 import { Admission } from './module.model';
+import { User } from '../user/user.model';
 
 const createCourseIntoDB = async (payload: TCourse) => {
   try {
@@ -21,33 +22,43 @@ const createCourseIntoDB = async (payload: TCourse) => {
   }
 };
 
-// const getAllCoursesFromDB = async (query: Record<string, unknown>) => {
-//   const courseQuery = new QueryBuilder(
-//     Course.find().populate('preRequisiteCourses.course'),
-//     query,
-//   )
-//     .search(CourseSearchableFields)
-//     .filter()
-//     .sort()
-//     .paginate()
-//     .fields();
+const getAllCoursesFromDB = async () => {
+  const result = await Admission.find()
+    .populate('program', 'name') // Assuming 'name' is a field in AcademicDepartment
+    .populate('semester', 'name'); // Assuming 'title' is a field in AcademicSemester
+  return result;
+};
+const acceptAdmissionRequestDB = async (id:string) => {
+   
+  const admission = await Admission.findOne({ id: id });
+  if (!admission) {
+    throw new AppError(httpStatus.NOT_FOUND, 'Admission request not found');
+  }
 
-//   const result = await courseQuery.modelQuery;
-//   const meta = await courseQuery.countTotal();
+  const result = await Admission.updateOne({ id: id }, { $set: { status: "accepted" } });
+  await User.findByIdAndUpdate(
+   {_id: admission?.id}, // Assuming `userId` is a field in the Admission model
+    { $addToSet: { role: "admitted-student" } }
+  );
 
-//   return {
-//     meta,
-//     result,
-//   };
-// };
+  return result;
+};
+const rejectAdmissionRequestDB = async (id:string) => {
+   
+  const result = await Admission.find({_id:id}).updateOne({}, { status: "rejected" });
+
+  return result
+};
 
 const getSingleCourseFromDB = async (id: string) => {
-  const result = await Admission.find({ course: id });
+  const result = await Admission.find({ _id: id });
   return result;
 };
 
 export const CourseServices = {
   createCourseIntoDB,
-  // getAllCoursesFromDB,
+  getAllCoursesFromDB,
   getSingleCourseFromDB,
+  acceptAdmissionRequestDB,
+  rejectAdmissionRequestDB
 };
