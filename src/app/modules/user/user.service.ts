@@ -230,6 +230,7 @@ const createSuperAdminIntoDB = async (
 ) => {
   // create a user object
   const userData: Partial<TUser> = {};
+//create a user object
 
   //if password is not given , use deafult password
   userData.password = password || (config.default_password as string);
