@@ -12,21 +12,21 @@ const createUserNameValidationSchema = z.object({
   lastName: z.string(),
 });
 
-const createGuardianValidationSchema = z.object({
-  fatherName: z.string(),
-  fatherOccupation: z.string(),
-  fatherContactNo: z.string(),
-  motherName: z.string(),
-  motherOccupation: z.string(),
-  motherContactNo: z.string(),
-});
+// const createGuardianValidationSchema = z.object({
+//   fatherName: z.string(),
+//   fatherOccupation: z.string(),
+//   fatherContactNo: z.string(),
+//   motherName: z.string(),
+//   motherOccupation: z.string(),
+//   motherContactNo: z.string(),
+// });
 
-const createLocalGuardianValidationSchema = z.object({
-  name: z.string(),
-  occupation: z.string(),
-  contactNo: z.string(),
-  address: z.string(),
-});
+// const createLocalGuardianValidationSchema = z.object({
+//   name: z.string(),
+//   occupation: z.string(),
+//   contactNo: z.string(),
+//   address: z.string(),
+// });
 
 export const createStudentValidationSchema = z.object({
   body: z.object({
@@ -41,8 +41,8 @@ export const createStudentValidationSchema = z.object({
       bloogGroup: z.enum(['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-']),
       presentAddress: z.string(),
       permanentAddress: z.string(),
-      guardian: createGuardianValidationSchema,
-      localGuardian: createLocalGuardianValidationSchema,
+      // guardian: createGuardianValidationSchema,
+      // localGuardian: createLocalGuardianValidationSchema,
       admissionSemester: z.string(),
       academicDepartment: z.string(),
     }),
