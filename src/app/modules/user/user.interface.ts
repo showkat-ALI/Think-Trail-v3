@@ -7,7 +7,7 @@ export type TUserRoles =
   | 'student'
   | 'faculty'
   | 'instructor'
-  | 'admitted-student'
+  | 'admitted'
   ;
 
 export type Roles = TUserRoles[];

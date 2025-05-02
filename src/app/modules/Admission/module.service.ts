@@ -38,7 +38,7 @@ const acceptAdmissionRequestDB = async (id:string) => {
   const result = await Admission.updateOne({ id: id }, { $set: { status: "accepted" } });
   await User.findByIdAndUpdate(
    {_id: admission?.id}, // Assuming `userId` is a field in the Admission model
-    { $addToSet: { role: "admitted-student" } }
+    { $addToSet: { role: "admitted" } }
   );
 
   return result;

@@ -5,7 +5,7 @@ import mongoose from 'mongoose';
 import config from '../../config';
 import AppError from '../../errors/AppError';
 import { sendImageToCloudinary } from '../../utils/sendImageToCloudinary';
-import { AcademicDepartment } from '../AcademicDepartment/academicDepartment.model';
+// import { AcademicDepartment } from '../AcademicDepartment/academicDepartment.model';
 import { AcademicSemester } from '../AcademicSemester/academicSemester.model';
 import { TAdmin } from '../Admin/admin.interface';
 import { Admin } from '../Admin/admin.model';
@@ -43,19 +43,19 @@ const createStudentIntoDB = async (
     payload.admissionSemester,
   );
 
-  if (!admissionSemester) {
-    throw new AppError(400, 'Admission semester not found');
-  }
+  // if (!admissionSemester) {
+  //   throw new AppError(400, 'Admission semester not found');
+  // }
 
-  // find department
-  const academicDepartment = await AcademicDepartment.findById(
-    payload.academicDepartment,
-  );
+  // // find department
+  // const academicDepartment = await AcademicDepartment.findById(
+  //   payload.academicDepartment,
+  // );
 
-  if (!academicDepartment) {
-    throw new AppError(400, 'Aademic department not found');
-  }
-  payload.academicFaculty = academicDepartment.academicFaculty;
+  // if (!academicDepartment) {
+  //   throw new AppError(400, 'Aademic department not found');
+  // }
+  // payload.academicFaculty = academicDepartment.academicFaculty;
 
   const session = await mongoose.startSession();
 

@@ -21,17 +21,17 @@ export const Months: TMonths[] = [
 ];
 
 export const AcademicSemesterName: TAcademicSemesterName[] = [
-  'Autumn',
+ 
   'Summer',
   'Fall',
 ];
 
-export const AcademicSemesterCode: TAcademicSemesterCode[] = ['01', '02', '03'];
+export const AcademicSemesterCode: TAcademicSemesterCode[] = ['01', '02', ];
 
 export const academicSemesterNameCodeMapper: TAcademicSemesterNameCodeMapper = {
-  Autumn: '01',
-  Summer: '02',
-  Fall: '03',
+  
+  Summer: '01',
+  Fall: '02',
 };
 
 export const AcademicSemesterSearchableFields = ['name', 'year'];

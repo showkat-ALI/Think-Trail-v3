@@ -27,9 +27,9 @@ const createAcademicSemesterIntoDB = async (payload: TAcademicSemester) => {
   const monthDifference =
     (endDate.getFullYear() - startDate.getFullYear()) * 12 +
     (endDate.getMonth() - startDate.getMonth());
-  if (monthDifference < 3) {
+  if (monthDifference <= 6) {
     throw new Error(
-      'There should be at least 4 months gap between start month and end month',
+      'There should be at least 6 months gap between start month and end month',
     );
   }
 
@@ -37,8 +37,8 @@ const createAcademicSemesterIntoDB = async (payload: TAcademicSemester) => {
     year: payload.year,
   });
 
-  if (currentYearSemesters.length >= 3) {
-    throw new Error('Cannot have more than 3 semesters in the current year');
+  if (currentYearSemesters.length >= 2) {
+    throw new Error('Cannot have more than 2 semesters in the current year');
   }
 
   const result = await AcademicSemester.create(payload);
@@ -64,7 +64,6 @@ const getAllAcademicSemestersFromDB = async (
     'December',
   ];
   const currentMonthName = monthNames[new Date().getMonth()];
-
   // First get all semesters that match other query parameters
   const academicSemesterQuery = new QueryBuilder(AcademicSemester.find(), query)
     .search(AcademicSemesterSearchableFields)
