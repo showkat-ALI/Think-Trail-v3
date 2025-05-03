@@ -27,7 +27,7 @@ const createAcademicSemesterIntoDB = async (payload: TAcademicSemester) => {
   const monthDifference =
     (endDate.getFullYear() - startDate.getFullYear()) * 12 +
     (endDate.getMonth() - startDate.getMonth());
-  if (monthDifference <= 6) {
+  if (monthDifference <= 4) {
     throw new Error(
       'There should be at least 6 months gap between start month and end month',
     );
@@ -103,6 +103,47 @@ const getSingleAcademicSemesterFromDB = async (id: string) => {
   const result = await AcademicSemester.findById(id);
   return result;
 };
+const getCurrentAcademicSemesterFromDB = async () => {
+  const monthNames = [
+    'January',
+    'February',
+    'March',
+    'April',
+    'May',
+    'June',
+    'July',
+    'August',
+    'September',
+    'October',
+    'November',
+    'December',
+  ];
+  const currentYear = new Date().getFullYear();
+  const currentMonth = new Date().getMonth(); // 0-based index (4 for May)
+  
+  const semesters = await AcademicSemester.find();
+  
+ 
+  // const result = semesters.find((semester) => {
+  //   const startIndex = monthNames.indexOf(semester.startMonth);
+  //   const endIndex = monthNames.indexOf(semester.endMonth);
+    
+  //   // Handle edge case where the semester spans across two years
+  //   if (startIndex > endIndex) {
+  //     // For example, if semester is from September to February
+  //     return currentMonth >= startIndex || currentMonth <= endIndex;
+  //   } else {
+  //     // Regular case (e.g., January to June)
+  //     return currentMonth >= startIndex && currentMonth <= endIndex;
+  //   }
+  // });
+
+  // if (!result) {
+  //   throw new Error('No academic semester found for the current month');
+  // }
+
+  return semesters;
+};
 
 const updateAcademicSemesterIntoDB = async (
   id: string,
@@ -127,4 +168,5 @@ export const AcademicSemesterServices = {
   getAllAcademicSemestersFromDB,
   getSingleAcademicSemesterFromDB,
   updateAcademicSemesterIntoDB,
+  getCurrentAcademicSemesterFromDB
 };

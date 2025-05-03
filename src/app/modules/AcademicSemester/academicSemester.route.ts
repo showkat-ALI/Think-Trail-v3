@@ -29,7 +29,12 @@ router.patch(
   ),
   AcademicSemesterControllers.updateAcademicSemester,
 );
+router.get(
+  '/current-semester',
+  auth(['admin', 'faculty', 'instructor', 'student', 'superAdmin']),
 
+  AcademicSemesterControllers.getCurrentAcademicSemester,
+);
 router.get(
   '/',
 

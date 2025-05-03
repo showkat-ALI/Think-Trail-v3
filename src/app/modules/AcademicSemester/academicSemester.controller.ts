@@ -38,7 +38,19 @@ const getSingleAcademicSemester = catchAsync(async (req, res) => {
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
-    message: 'Academic semester is retrieved succesfully',
+    message: 'Academic semester is  succesfully',
+    data: result,
+  });
+});
+const getCurrentAcademicSemester = catchAsync(async (req, res) => {
+
+  const result =
+    await AcademicSemesterServices.getCurrentAcademicSemesterFromDB();
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Academic current semester is retrieved succesfully',
     data: result,
   });
 });
@@ -63,4 +75,5 @@ export const AcademicSemesterControllers = {
   getAllAcademicSemesters,
   getSingleAcademicSemester,
   updateAcademicSemester,
+  getCurrentAcademicSemester
 };
