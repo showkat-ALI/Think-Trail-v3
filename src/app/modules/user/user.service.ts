@@ -23,15 +23,14 @@ import {
 import { SuperAdmin } from '../SuperAdmin/admin.model';
 
 const createStudentIntoDB = async (
-  file: any,
-  password: string,
+  // file: any,
   payload: TStudent,
 ) => {
   // create a user object
   const userData: Partial<TUser> = {};
 
   //if password is not given , use default password
-  userData.password = password || (config.default_password as string);
+  userData.password = payload.password || (config.default_password as string);
 
   //set student role
   userData.roles = ['student'];

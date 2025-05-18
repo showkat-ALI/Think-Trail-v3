@@ -17,7 +17,7 @@ router.post(
 
 router.get(
   '/:courseId',
-  auth(['admin', 'faculty', 'instructor', 'student', 'superAdmin']),
+  // auth(['admin', 'faculty', 'instructor', 'student', 'superAdmin']),
   AcademicSemesterControllers.getSingleAcademicSemester,
 );
 
@@ -30,8 +30,8 @@ router.patch(
   AcademicSemesterControllers.updateAcademicSemester,
 );
 router.get(
-  '/current-semester',
-  auth(['admin', 'faculty', 'instructor', 'student', 'superAdmin']),
+  '/semester/current-semester',
+  // auth(['admin', 'faculty', 'instructor', 'student', 'superAdmin']),
 
   AcademicSemesterControllers.getCurrentAcademicSemester,
 );

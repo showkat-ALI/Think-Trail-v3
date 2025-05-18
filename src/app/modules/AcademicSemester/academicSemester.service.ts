@@ -55,6 +55,7 @@ const getAllAcademicSemestersFromDB = async (
     'March',
     'April',
     'May',
+    
     'June',
     'July',
     'August',
@@ -100,7 +101,7 @@ const getAllAcademicSemestersFromDB = async (
 };
 
 const getSingleAcademicSemesterFromDB = async (id: string) => {
-  const result = await AcademicSemester.findById(id);
+  const result = await AcademicSemester.find({_id:id});
   return result;
 };
 const getCurrentAcademicSemesterFromDB = async () => {
@@ -118,31 +119,30 @@ const getCurrentAcademicSemesterFromDB = async () => {
     'November',
     'December',
   ];
-  const currentYear = new Date().getFullYear();
   const currentMonth = new Date().getMonth(); // 0-based index (4 for May)
-  
-  const semesters = await AcademicSemester.find();
-  
- 
-  // const result = semesters.find((semester) => {
-  //   const startIndex = monthNames.indexOf(semester.startMonth);
-  //   const endIndex = monthNames.indexOf(semester.endMonth);
+
+  // Assuming AcademicSemester is a Mongoose model
+  const semesters = await AcademicSemester.find().exec(); // Fetch all semesters from DB
+
+  const result = semesters.find((semester) => {
+    const startIndex = monthNames.indexOf(semester.startMonth);
+    const endIndex = monthNames.indexOf(semester.endMonth);
     
-  //   // Handle edge case where the semester spans across two years
-  //   if (startIndex > endIndex) {
-  //     // For example, if semester is from September to February
-  //     return currentMonth >= startIndex || currentMonth <= endIndex;
-  //   } else {
-  //     // Regular case (e.g., January to June)
-  //     return currentMonth >= startIndex && currentMonth <= endIndex;
-  //   }
-  // });
+    // Handle edge case where the semester spans across two years
+    if (startIndex > endIndex) {
+      // For example, if semester is from September to February
+      return currentMonth >= startIndex || currentMonth <= endIndex;
+    } else {
+      // Regular case (e.g., January to June)
+      return currentMonth >= startIndex && currentMonth <= endIndex;
+    }
+  });
 
-  // if (!result) {
-  //   throw new Error('No academic semester found for the current month');
-  // }
+  if (!result) {
+    throw new Error('No academic semester found for the current month');
+  }
 
-  return semesters;
+  return result;
 };
 
 const updateAcademicSemesterIntoDB = async (

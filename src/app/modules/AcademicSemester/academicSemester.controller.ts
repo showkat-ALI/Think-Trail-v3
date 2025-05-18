@@ -74,6 +74,7 @@ export const AcademicSemesterControllers = {
   createAcademicSemester,
   getAllAcademicSemesters,
   getSingleAcademicSemester,
+  getCurrentAcademicSemester,
+
   updateAcademicSemester,
-  getCurrentAcademicSemester
 };
