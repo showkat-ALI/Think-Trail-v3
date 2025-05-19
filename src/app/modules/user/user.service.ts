@@ -37,40 +37,52 @@ const createStudentIntoDB = async (
   // set student email
   userData.email = payload.email;
 
-  // find academic semester info
-  const admissionSemester = await AcademicSemester.findById(
-    payload.admissionSemester,
-  );
+  const monthNames = [
+    'January',
+    'February',
+    'March',
+    'April',
+    'May',
+    'June',
+    'July',
+    'August',
+    'September',
+    'October',
+    'November',
+    'December',
+  ];
+  const currentMonth = new Date().getMonth(); // 0-based index (4 for May)
 
-  // if (!admissionSemester) {
-  //   throw new AppError(400, 'Admission semester not found');
-  // }
+  // Assuming AcademicSemester is a Mongoose model
+  const semesters = await AcademicSemester.find().exec(); // Fetch all semesters from DB
 
-  // // find department
-  // const academicDepartment = await AcademicDepartment.findById(
-  //   payload.academicDepartment,
-  // );
-
-  // if (!academicDepartment) {
-  //   throw new AppError(400, 'Aademic department not found');
-  // }
-  // payload.academicFaculty = academicDepartment.academicFaculty;
-
+  const curentSemester = semesters.find((semester) => {
+    const startIndex = monthNames.indexOf(semester.startMonth);
+    const endIndex = monthNames.indexOf(semester.endMonth);
+    
+    // Handle edge case where the semester spans across two years
+    if (startIndex > endIndex) {
+      // For example, if semester is from September to February
+      return currentMonth >= startIndex || currentMonth <= endIndex;
+    } else {
+      // Regular case (e.g., January to June)
+      return currentMonth >= startIndex && currentMonth <= endIndex;
+    }
+  });
   const session = await mongoose.startSession();
-
   try {
     session.startTransaction();
     //set  generated id
-    userData.id = await generateStudentId(admissionSemester);
+    userData.id = await generateStudentId(curentSemester);
 
-    if (file) {
-      const imageName = `${userData.id}${payload?.name?.firstName}`;
-      const path = file?.path;
+    // if (file) {
+    //   const imageName = `${userData.id}${payload?.name?.firstName}`;
+    //   const path = file?.path;
 
-      //send image to cloudinary
-      const { secure_url } = await sendImageToCloudinary(imageName, path);
-      payload.profileImg = secure_url as string;
-    }
+    //   //send image to cloudinary
+    //   const { secure_url } = await sendImageToCloudinary(imageName, path);
+    //   payload.profileImg = secure_url as string;
+    // }
 
     // create a user (transaction-1)
     const newUser = await User.create([userData], { session }); // array

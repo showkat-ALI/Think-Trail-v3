@@ -8,7 +8,6 @@ const createUserNameValidationSchema = z.object({
     .refine((value) => /^[A-Z]/.test(value), {
       message: 'First Name must start with a capital letter',
     }),
-  middleName: z.string(),
   lastName: z.string(),
 });
 
@@ -36,7 +35,7 @@ export const createStudentValidationSchema = z.object({
       dateOfBirth: z.string().optional(),
       email: z.string().email(),
       contactNo: z.string(),
-      bloodGroup: z.enum(['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-']),
+      // bloodGroup: z.enum(['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-']),
       presentAddress: z.string(),
       permanentAddress: z.string(),
       password:z.string()

@@ -14,10 +14,7 @@ const userNameSchema = new Schema<TUserName>({
     trim: true,
     maxlength: [20, 'Name can not be more than 20 characters'],
   },
-  middleName: {
-    type: String,
-    trim: true,
-  },
+  
   lastName: {
     type: String,
     trim: true,
@@ -106,17 +103,14 @@ const studentSchema = new Schema<TStudent, StudentModel>(
       unique: true,
     },
     contactNo: { type: String, required: [true, 'Contact number is required'] },
-    emergencyContactNo: {
-      type: String,
-      required: [true, 'Emergency contact number is required'],
-    },
-    bloogGroup: {
-      type: String,
-      enum: {
-        values: ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'],
-        message: '{VALUE} is not a valid blood group',
-      },
-    },
+   
+    // bloodGroup: {
+    //   type: String,
+    //   enum: {
+    //     values: ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'],
+    //     message: '{VALUE} is not a valid blood group',
+    //   },
+    // },
     presentAddress: {
       type: String,
       required: [true, 'Present address is required'],
@@ -125,31 +119,21 @@ const studentSchema = new Schema<TStudent, StudentModel>(
       type: String,
       required: [true, 'Permanent address is required'],
     },
-    guardian: {
-      type: guardianSchema,
-      required: [true, 'Guardian information is required'],
-    },
-    localGuardian: {
-      type: localGuradianSchema,
-      required: [true, 'Local guardian information is required'],
-    },
+    
     profileImg: { type: String, default: '' },
-    admissionSemester: {
-      type: Schema.Types.ObjectId,
-      ref: 'AcademicSemester',
-    },
+   
     isDeleted: {
       type: Boolean,
       default: false,
     },
-    academicDepartment: {
-      type: Schema.Types.ObjectId,
-      ref: 'AcademicDepartment',
-    },
-    academicFaculty: {
-      type: Schema.Types.ObjectId,
-      ref: 'AcademicFaculty',
-    },
+    // academicDepartment: {
+    //   type: Schema.Types.ObjectId,
+    //   ref: 'AcademicDepartment',
+    // },
+    // academicFaculty: {
+    //   type: Schema.Types.ObjectId,
+    //   ref: 'AcademicFaculty',
+    // },
   },
   {
     toJSON: {
@@ -160,7 +144,7 @@ const studentSchema = new Schema<TStudent, StudentModel>(
 
 //virtual
 studentSchema.virtual('fullName').get(function () {
-  return this?.name?.firstName + this?.name?.middleName + this?.name?.lastName;
+  return this?.name?.firstName + this?.name?.lastName;
 });
 
 // Query Middleware
