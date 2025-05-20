@@ -4,6 +4,8 @@ import AppError from '../../errors/AppError';
 import { CourseSearchableFields } from './course.constant';
 import { TCourse } from './course.interface';
 import { Course } from './course.model';
+import { Admission } from '../Admission/module.model';
+import { Admin } from '../Admin/admin.model';
 
 const createCourseIntoDB = async (payload: TCourse) => {
   try {
@@ -47,9 +49,38 @@ const getSingleCourseFromDB = async (id: string) => {
   );
   return result;
 };
+const getAllmyCourse = async (id: string) => {
+  const admission = await Admission.findOne({
+    _id: id,
+    roles: { $all: ["student", "admitted"] },
+    status: "accepted"
+  }).populate('program');
+
+if (!admission) {
+  throw new AppError(httpStatus.NOT_FOUND, 'Admission not found or not eligible');
+}
+
+const admin = await Admin.findOne({
+  assignedDepartment: admission?.program,
+});
+if (!admin) {
+  throw new AppError(httpStatus.NOT_FOUND, 'Admin not found for the assigned department');
+}
+
+const courses = await Course.find({
+  createdBy: "6794fbed665a6c5d163ae7c5",
+});
+
+const result = {
+  courses
+  
+};
+  return result;
+};
 
 export const CourseServices = {
   createCourseIntoDB,
   getAllCoursesFromDB,
   getSingleCourseFromDB,
+  getAllmyCourse
 };

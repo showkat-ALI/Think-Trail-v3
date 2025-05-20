@@ -35,10 +35,15 @@ const acceptAdmissionRequestDB = async (id:string) => {
     throw new AppError(httpStatus.NOT_FOUND, 'Admission request not found');
   }
 
-  const result = await Admission.updateOne({ id: id }, { $set: { status: "accepted" } });
-  await User.findByIdAndUpdate(
-   {_id: admission?.id}, // Assuming `userId` is a field in the Admission model
-    { $addToSet: { role: "admitted" } }
+  const result = await Admission.updateOne(
+    { _id: id },
+    { $set: { status: "accepted" }, $addToSet: { roles: "admitted" } }
+  );
+  
+  // Update the user's roles
+  await User.updateOne(
+    { id: admission?.id },  // Query to find the user
+    { $addToSet: { roles: "admitted" }}  // Add "admitted" to roles array and change status to "accepted"
   );
 
   return result;

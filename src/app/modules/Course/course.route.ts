@@ -18,6 +18,11 @@ router.get(
   auth(['admin', 'faculty', 'instructor', 'student', 'superAdmin']),
   CourseControllers.getSingleCourse,
 );
+router.get(
+  '/my-courses/:id',
+  auth(['admin', 'faculty', 'instructor', 'student', 'superAdmin']),
+  CourseControllers.getAllMyCourse,
+);
 
 router.get(
   '/',
