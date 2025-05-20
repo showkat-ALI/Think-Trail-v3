@@ -20,4 +20,9 @@ export default {
   super_admin_password: process.env.SUPER_ADMIN_PASSWORD,
   minio_accessKey: process.env.MINIO_ACCESS_KEY,
   minio_secretKey: process.env.MINIO_SECRET_KEY,
+  email_host: process.env.EMAIL_HOST,
+  email_port: process.env.EMAIL_PORT,
+  email_user: process.env.EMAIL_USERNAME,
+  email_password: process.env.EMAIL_PASSWORD,
+  email_from: process.env.EMAIL_FROM,
 };

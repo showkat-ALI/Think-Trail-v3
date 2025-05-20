@@ -30,7 +30,7 @@ const getAllCoursesFromDB = async () => {
 };
 const acceptAdmissionRequestDB = async (id:string) => {
    
-  const admission = await Admission.findOne({ id: id });
+  const admission = await Admission.findOne({ _id: id });
   if (!admission) {
     throw new AppError(httpStatus.NOT_FOUND, 'Admission request not found');
   }

@@ -15,18 +15,14 @@ import { TStudent } from '../Student/student.interface';
 import { Student } from '../Student/student.model';
 import { TUser } from './user.interface';
 import { User } from './user.model';
-import {
+import emailSender, {
   generateAdminId,
   generateFacultyId,
   generateStudentId,
 } from './user.utils';
 import { SuperAdmin } from '../SuperAdmin/admin.model';
 
-const createStudentIntoDB = async (
-  // file: any,
-  payload: TStudent,
-) => {
-  // create a user object
+const createStudentIntoDB = async (payload: TStudent) => {
   const userData: Partial<TUser> = {};
 
   //if password is not given , use default password
@@ -51,51 +47,54 @@ const createStudentIntoDB = async (
     'November',
     'December',
   ];
-  const currentMonth = new Date().getMonth(); // 0-based index (4 for May)
+  const currentMonth = new Date().getMonth();
 
-  // Assuming AcademicSemester is a Mongoose model
-  const semesters = await AcademicSemester.find().exec(); // Fetch all semesters from DB
-
+  const semesters = await AcademicSemester.find().exec();
   const curentSemester = semesters.find((semester) => {
     const startIndex = monthNames.indexOf(semester.startMonth);
     const endIndex = monthNames.indexOf(semester.endMonth);
     
-    // Handle edge case where the semester spans across two years
     if (startIndex > endIndex) {
-      // For example, if semester is from September to February
       return currentMonth >= startIndex || currentMonth <= endIndex;
     } else {
-      // Regular case (e.g., January to June)
       return currentMonth >= startIndex && currentMonth <= endIndex;
     }
   });
+
   const session = await mongoose.startSession();
   try {
     session.startTransaction();
-    //set  generated id
+    
+    // Generate student ID
     userData.id = await generateStudentId(curentSemester);
 
-    // if (file) {
-    //   const imageName = `${userData.id}${payload?.name?.firstName}`;
-    //   const path = file?.path;
+    // Create user
+    const newUser = await User.create([userData], { session });
 
-    //   //send image to cloudinary
-    //   const { secure_url } = await sendImageToCloudinary(imageName, path);
-    //   payload.profileImg = secure_url as string;
-    // }
-
-    // create a user (transaction-1)
-    const newUser = await User.create([userData], { session }); // array
-
-    //create a student
     if (!newUser.length) {
       throw new AppError(httpStatus.BAD_REQUEST, 'Failed to create user');
     }
-    // set id , _id as user
-    payload.id = newUser[0].id;
-    payload.user = newUser[0]._id; //reference _id
 
-    // create a student (transaction-2)
+    // Prepare email content
+    const emailSubject = 'Your Student Account Credentials';
+    const emailHtml = `
+      <div>
+        <h2>Welcome to Our Platform!</h2>
+        <p>Here are your login credentials:</p>
+        <p><strong>User ID:</strong> ${userData.id}</p>
+        <p><strong>Password:</strong> ${userData.password}</p>
+        <p>Please keep this information secure and do not share it with others.</p>
+      </div>
+    `;
+
+    // Send email with credentials
+    await emailSender(payload.email, emailSubject, emailHtml);
+
+    // Set id and user reference
+    payload.id = newUser[0].id;
+    payload.user = newUser[0]._id;
+
+    // Create student
     const newStudent = await Student.create([payload], { session });
 
     if (!newStudent.length) {

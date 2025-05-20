@@ -5,8 +5,8 @@ const courseSchema = new Schema<TCourse>({
  program: { type: Schema.Types.ObjectId, ref: 'AcademicDepartment' },
   semester: { type: Schema.Types.ObjectId, ref: 'AcademicSemester' },
   id: {
-    type: Schema.Types.ObjectId,
-    ref: 'User',
+    type:String,
+    
   },
   email: {
     type: String,

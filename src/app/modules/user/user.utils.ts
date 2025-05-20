@@ -1,5 +1,7 @@
+import config from '../../config';
 import { TAcademicSemester } from '../AcademicSemester/academicSemester.interface';
 import { User } from './user.model';
+import nodemailer from 'nodemailer';
 
 const findLastStudentId = async () => {
   const lastStudent = await User.findOne(
@@ -110,3 +112,37 @@ export const generateAdminId = async () => {
   incrementId = `A-${incrementId}`;
   return incrementId;
 };
+
+const emailSender = async (
+  email: string,
+  subject: string,
+  html: string
+) => {
+  try {
+    // Create a transporter
+    const transporter = nodemailer.createTransport({
+      host: config.email_host,
+      port: Number(config.email_port),
+      secure: false, // true for 465, false for other ports
+      auth: {
+        user: config.email_user,
+        pass: config.email_password,
+      },
+    });
+
+    // Send mail
+    await transporter.sendMail({
+      from: config.email_from,
+      to: email,
+      subject: subject,
+      html: html,
+    });
+
+    console.log('Email sent successfully');
+  } catch (error) {
+    console.error('Error sending email:', error);
+    throw new Error('Email sending failed');
+  }
+};
+
+export default emailSender;

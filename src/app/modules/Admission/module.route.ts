@@ -8,7 +8,7 @@ const router = express.Router();
 
 router.post(
   '/create-admission-request',
-  auth(['admin', 'superAdmin']),
+  auth(['admin', 'superAdmin','student']),
   validateRequest(CourseValidations.createCourseValidationSchema),
   CourseControllers.createCourse,
 );

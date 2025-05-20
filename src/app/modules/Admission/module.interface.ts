@@ -11,7 +11,7 @@ export type TCourse = {
   program: Types.ObjectId;
   agreeTerms: boolean;
   email: string;
-  id: Types.ObjectId;
+  id: string;
   roles: Roles[];
   isDeleted: boolean;
   status: string;
