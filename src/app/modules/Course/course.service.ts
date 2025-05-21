@@ -68,7 +68,7 @@ if (!admin) {
 }
 
 const courses = await Course.find({
-  createdBy: "6794fbed665a6c5d163ae7c5",
+  createdBy: admin?._id,
 });
 
 const result = {
