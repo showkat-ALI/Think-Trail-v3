@@ -53,6 +53,6 @@
     "eslint-config-prettier": "^9.0.0",
     "husky": "^8.0.0",
     "prettier": "^3.1.0",
-    "ts-node-dev": "^2.0.0",
+    "ts-node-dev": "^2.0.0"
   }
 }
