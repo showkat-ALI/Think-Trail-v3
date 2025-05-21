@@ -44,6 +44,7 @@ const loginUser = async (payload: TLoginUser) => {
     email: user.email,
     status: user.status,
     isDeleted: user.isDeleted,
+    _id:user._id
   };
 
   const accessToken = createToken(
@@ -156,6 +157,7 @@ const refreshToken = async (token: string) => {
     email: user.email,
     status: user.status,
     isDeleted: user.isDeleted,
+    _id:user._id
   };
 
   const accessToken = createToken(
@@ -196,6 +198,7 @@ const forgetPassword = async (userId: string) => {
     email: user.email,
     status: user.status,
     isDeleted: user.isDeleted,
+  _id:user._id
   };
 
   const resetToken = createToken(

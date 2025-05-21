@@ -7,6 +7,7 @@ export const createToken = (
     email: string;
     status: string;
     isDeleted: boolean;
+    _id:string
   },
   secret: string,
   expiresIn: string,

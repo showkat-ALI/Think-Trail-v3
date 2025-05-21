@@ -51,7 +51,7 @@ const getSingleCourseFromDB = async (id: string) => {
 };
 const getAllmyCourse = async (id: string) => {
   const admission = await Admission.findOne({
-    _id: id,
+    id: id,
     roles: { $all: ["student", "admitted"] },
     status: "accepted"
   }).populate('program');

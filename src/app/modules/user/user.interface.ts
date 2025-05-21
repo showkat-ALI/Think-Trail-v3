@@ -12,6 +12,7 @@ export type TUserRoles =
 
 export type Roles = TUserRoles[];
 export interface TUser {
+  _id: string; // ObjectId as a string
   id: string;
   email: string;
   password: string;

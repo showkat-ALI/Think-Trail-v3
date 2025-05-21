@@ -7,6 +7,7 @@ import { TUser, UserModel } from './user.interface';
 
 const userSchema = new Schema<TUser, UserModel>(
   {
+  // _id is automatically handled by Mongoose
     id: {
       type: String,
       required: true,
@@ -20,7 +21,7 @@ const userSchema = new Schema<TUser, UserModel>(
     password: {
       type: String,
       required: true,
-      select: 0,
+      select: 0
     },
     needsPasswordChange: {
       type: Boolean,
@@ -31,7 +32,8 @@ const userSchema = new Schema<TUser, UserModel>(
     },
     roles: {
       type: [String],
-      enum: ['superAdmin', 'admin', 'student', 'faculty', 'instructor','admitted'],
+      enum: ['superAdmin', 'admin', 'student', 'faculty', 'instructor',
+      'admitted'],
     },
     status: {
       type: String,
