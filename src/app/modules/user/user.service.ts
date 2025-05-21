@@ -66,6 +66,9 @@ const createStudentIntoDB = async (payload: TStudent) => {
     session.startTransaction();
     
     // Generate student ID
+    if (!curentSemester) {
+      throw new AppError(httpStatus.BAD_REQUEST, 'Current semester not found');
+    }
     userData.id = await generateStudentId(curentSemester);
 
     // Create user
