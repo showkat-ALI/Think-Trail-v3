@@ -10,11 +10,12 @@ const loginUser = catchAsync(async (req, res) => {
   const { refreshToken, accessToken, needsPasswordChange } = result;
 
   res.cookie('refreshToken', refreshToken, {
-    secure: true,
+    secure: config.NODE_ENV === 'production', // true in production only
     httpOnly: true,
-    sameSite: 'lax',
+    sameSite: config.NODE_ENV === 'production' ? 'none' : 'lax', // none for cross-site
     maxAge: 1000 * 60 * 60 * 24 * 365,
-    domain: config.NODE_ENV === 'production' ? '.think-trail.vercel.app' : undefined
+    domain: config.NODE_ENV === 'production' ? 'think-trail.vercel.app' : undefined,
+    path: '/'
   });
 
   sendResponse(res, {
