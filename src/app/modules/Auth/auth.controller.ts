@@ -10,12 +10,16 @@ const loginUser = catchAsync(async (req, res) => {
   const { refreshToken, accessToken, needsPasswordChange } = result;
 
   res.cookie('refreshToken', refreshToken, {
-    secure: true, // Must be true for Vercel
+    secure: true,
     httpOnly: true,
-    sameSite: 'none', // Required for cross-site cookies
+    sameSite: 'none',
     maxAge: 1000 * 60 * 60 * 24 * 365,
-    domain: '.think-trail.vercel.app', // Note the leading dot
-    path: '/'
+    domain: 'think-trail.vercel.app', // No leading dot
+    path: '/',
+    // Add these for Vercel:
+    // For Chrome's new cookie partitioning
+    // If using Next.js API routes:
+    // path: '/api', // Might need to match your API route path
   });
 
   sendResponse(res, {
