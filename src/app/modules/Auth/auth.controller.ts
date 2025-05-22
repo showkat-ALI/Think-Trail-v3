@@ -8,15 +8,15 @@ import { AuthServices } from './auth.service';
 const loginUser = catchAsync(async (req, res) => {
   const result = await AuthServices.loginUser(req.body);
   const { refreshToken, accessToken, needsPasswordChange } = result;
-
   res.cookie('refreshToken', refreshToken, {
-    secure: true,
+    secure: true, // Must be true for HTTPS
     httpOnly: true,
-    sameSite: 'lax',
+    sameSite: 'none', // Required for cross-site cookies
     maxAge: 1000 * 60 * 60 * 24 * 365,
-    domain: config.NODE_ENV === 'production' ? '.think-trail.vercel.app' : undefined
+    domain: config.NODE_ENV === 'production' ? 'think-trail.vercel.app' : undefined,
+    path: '/', // Explicit path
+    // Removed 'partitioned' as it is not a valid CookieOptions property
   });
-
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
