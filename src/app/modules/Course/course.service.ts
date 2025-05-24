@@ -7,7 +7,8 @@ import { Course } from './course.model';
 import { Admission } from '../Admission/module.model';
 import { Admin } from '../Admin/admin.model';
 import { Module } from '../Module/module.model';
-import { ModuleVideo } from '../ModuleData/module.model';
+import { ModuleAssignment, ModuleVideo } from '../ModuleData/module.model';
+import { Assignment } from '../Assignments/assignments.model';
 
 const createCourseIntoDB = async (payload: TCourse) => {
   try {
@@ -51,9 +52,17 @@ const getSingleCourseFromDB = async (id: string) => {
 const module = await Module.find({ course: course?._id });
 const moduleIds = module.map(m => m._id);
 const moduleVideo = await ModuleVideo.find({ module: { $in: moduleIds } });
+const assignment= await ModuleAssignment.find({module:{ $in: moduleIds }})
+const moduleAssignment = await Assignment.find({
+  _id: { $in: assignment.map(a => a.assignment) }
+});
+
 return {
+  course,
   module,
   moduleVideo,
+  assignment,
+  moduleAssignment
 };
 };
 const getAllmyCourse = async (id: string) => {

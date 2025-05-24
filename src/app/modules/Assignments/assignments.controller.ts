@@ -40,10 +40,22 @@ const getAssignmentsByInstructor = catchAsync(async (req, res) => {
     data: result,
   });
 });
+const getSingleAssignment = catchAsync(async (req, res) => {
+  const {id}=req.params
+  const result =
+    await AssignmentServices.getSingleAssingment(id);
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Assignment retrived successfully',
+    data: result,
+  });
+});
 
 export const AssignmentControllers = {
   uploadFile,
   createAssignment,
   getAssignmentsByInstructor,
-  uploadModuleVideo
+  uploadModuleVideo,
+  getSingleAssignment
 };

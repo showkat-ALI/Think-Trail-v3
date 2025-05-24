@@ -77,9 +77,30 @@ const getAllAssignementsByInstructorfromDB = async (req: Request) => {
     );
   }
 };
+const getSingleAssingment = async (id:any) => {
+  
+
+  if (!id) {
+    throw new AppError(
+      httpStatus.BAD_REQUEST,
+      'createdBy query parameter is required',
+    );
+  }
+
+  try {
+    const assignments = await Assignment.find({ _id:id });
+    return { assignments };
+  } catch (error) {
+    throw new AppError(
+      httpStatus.INTERNAL_SERVER_ERROR,
+      'Error fetching assignments from the database',
+    );
+  }
+};
 export const AssignmentServices = {
   createAssignmentFileIntoDB,
   createAssignmentIntoDB,
   getAllAssignementsByInstructorfromDB,
   createModuleVideoIntoDB,
+  getSingleAssingment
 };
