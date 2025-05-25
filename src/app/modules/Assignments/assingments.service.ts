@@ -58,6 +58,8 @@ const createAssignmentIntoDB = async (req: Request) => {
   }
 };
 const submitAssignmentIntoDB = async (req: Request) => {
+  const {studentId,assignmentId,courseId}=req.params;
+  
   const data = req.body;
   try {
     // Assuming you have a function to save the assignment data to the database
@@ -65,7 +67,7 @@ const submitAssignmentIntoDB = async (req: Request) => {
     return { savedAssignment };
   } catch (error) {
     throw new AppError(
-      httpStatus.INTERNAL_SERVER_ERROR,
+      httpStatus.INTERNAL_SERVER_ERROR, 
       'Error creating assignment in the database',
     );
   }
