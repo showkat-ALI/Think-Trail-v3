@@ -52,7 +52,7 @@ const getSingleAssignment = catchAsync(async (req, res) => {
   });
 });
 const submitAssignment = catchAsync(async (req, res) => {
-  const result = await AssignmentServices.createAssignmentIntoDB(req);
+  const result = await AssignmentServices.submitAssignmentIntoDB(req);
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,

@@ -57,6 +57,19 @@ const createAssignmentIntoDB = async (req: Request) => {
     );
   }
 };
+const submitAssignmentIntoDB = async (req: Request) => {
+  const data = req.body;
+  try {
+    // Assuming you have a function to save the assignment data to the database
+    const savedAssignment = await Assignment.create(data);
+    return { savedAssignment };
+  } catch (error) {
+    throw new AppError(
+      httpStatus.INTERNAL_SERVER_ERROR,
+      'Error creating assignment in the database',
+    );
+  }
+};
 const getAllAssignementsByInstructorfromDB = async (req: Request) => {
   const { createdBy } = req.query;
 
@@ -102,5 +115,6 @@ export const AssignmentServices = {
   createAssignmentIntoDB,
   getAllAssignementsByInstructorfromDB,
   createModuleVideoIntoDB,
-  getSingleAssingment
+  getSingleAssingment,
+  submitAssignmentIntoDB
 };
