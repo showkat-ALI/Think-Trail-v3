@@ -45,5 +45,10 @@ router.get(
   auth(['admin', 'superAdmin',"student","admitted"]),
   AssignmentControllers.getSingleAssignment,
 );
-
+router.post(
+  "/submit-assignment/:courseId/:assignmentId/:studentId",
+  auth(["student","admitted"]),
+  validateRequest(AssignmentValidation.createAssignmentSubmitValidation),
+  AssignmentControllers.submitAssignment
+)
 export const AssignmentRoutes = router;

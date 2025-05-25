@@ -88,7 +88,7 @@ const getSingleAssingment = async (id:any) => {
   }
 
   try {
-    const assignments = await Assignment.find({ _id:id });
+    const assignments = await Assignment.findById({ _id:id });
     return { assignments };
   } catch (error) {
     throw new AppError(
