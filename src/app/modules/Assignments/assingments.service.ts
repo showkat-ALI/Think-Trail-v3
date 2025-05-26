@@ -3,11 +3,13 @@ import httpStatus from 'http-status';
 import AppError from '../../errors/AppError';
 
 import { Request } from 'express';
-import { Assignment } from './assignments.model';
+import { Assignment, SubmitAssignment } from './assignments.model';
 // import { minioClient } from '../../minio-config/minioConfig';
 import { sendImageToCloudinary } from '../../utils/sendImageToCloudinary';
 import { v4 as uuidv4 } from 'uuid';
 import { sendVideoToCloudinary } from '../../utils/sendVideoToCloudinary';
+import { User } from '../user/user.model';
+import { Course } from '../Course/course.model';
 
 const createAssignmentFileIntoDB = async (file: any) => {
   try {
@@ -58,16 +60,51 @@ const createAssignmentIntoDB = async (req: Request) => {
   }
 };
 const submitAssignmentIntoDB = async (req: Request) => {
-  const {studentId,assignmentId,courseId}=req.params;
-  
-  const data = req.body;
+  const { studentId, assignmentId, courseId } = req.params;
+
+  // Validate IDs
+  if (!studentId || !assignmentId || !courseId) {
+    throw new AppError(
+      httpStatus.BAD_REQUEST,
+      'studentId, assignmentId, and courseId are required parameters',
+    );
+  }
+
   try {
-    // Assuming you have a function to save the assignment data to the database
-    const savedAssignment = await Assignment.create(data);
+    // Check if the assignment exists
+    const assignmentExists = await Assignment.findById(assignmentId);
+    if (!assignmentExists) {
+      throw new AppError(
+        httpStatus.NOT_FOUND,
+        'Assignment not found',
+      );
+    }
+
+    // Check if the student exists (assuming you have a Student model)
+    const studentExists = await User.findById(studentId);
+    if (!studentExists) {
+      throw new AppError(
+        httpStatus.NOT_FOUND,
+        'Student not found',
+      );
+    }
+
+    // Check if the course exists (assuming you have a Course model)
+    const courseExists = await Course.findById(courseId);
+    if (!courseExists) {
+      throw new AppError(
+        httpStatus.NOT_FOUND,
+        'Course not found',
+      );
+    }
+
+    // Create the submission
+    const data = req.body;
+    const savedAssignment = await SubmitAssignment.create(data);
     return { savedAssignment };
   } catch (error) {
     throw new AppError(
-      httpStatus.INTERNAL_SERVER_ERROR, 
+      httpStatus.INTERNAL_SERVER_ERROR,
       'Error creating assignment in the database',
     );
   }

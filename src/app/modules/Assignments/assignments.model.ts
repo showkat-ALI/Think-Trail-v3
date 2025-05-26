@@ -1,5 +1,5 @@
 import { Schema, model } from 'mongoose';
-import { TAssignment } from './assignments.interface';
+import { TAssignment, TSubmitAssignment } from './assignments.interface';
 const SUBMISSION_ATTEMPTS = [
   'Five-attempts',
   'double-attempt',
@@ -43,5 +43,27 @@ const assignmentSchema = new Schema<TAssignment>({
     type: Date,
   },
 });
+const submitAssignmentSchema =new Schema <TSubmitAssignment>({
+  student:{
+    type:Schema.Types.ObjectId,
+
+  },
+  assignment: {
+    type: Schema.Types.ObjectId
+  },
+  comment:{
+    type:String
+  },
+  course:{
+    type:Schema.Types.ObjectId
+  },
+  fileUrl:{
+    type: String
+  },
+  text:{
+    type:String
+  }
+})
 
 export const Assignment = model<TAssignment>('Assignment', assignmentSchema);
+export const SubmitAssignment = model<TSubmitAssignment>('SubmitAssignment', submitAssignmentSchema);
