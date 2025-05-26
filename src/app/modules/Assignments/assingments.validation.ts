@@ -1,4 +1,4 @@
-import { z } from 'zod';
+import { string, z } from 'zod';
 
 const createAssignmentValidation = z.object({
   body: z.object({
@@ -18,10 +18,10 @@ const createAssignmentSubmitValidation = z.object({
    
     fileUrl: z.string(),
     comment: z.string().optional(),
-    student:z.string(),
     assignment:z.string(),
     course:z.string(),
     text:z.string(),
+    submittedBy:string()
     
   }),
 });

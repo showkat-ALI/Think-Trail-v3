@@ -42,9 +42,23 @@ const assignmentSchema = new Schema<TAssignment>({
   availUntil: {
     type: Date,
   },
+  submissions: [
+    {
+      student: {
+        type: Schema.Types.ObjectId,
+      },
+      assignment: {
+        type: Schema.Types.ObjectId,
+      },
+      course: {
+        type: Schema.Types.ObjectId,
+      },
+    },
+  ],
+
 });
 const submitAssignmentSchema =new Schema <TSubmitAssignment>({
-  student:{
+  submittedBy:{
     type:Schema.Types.ObjectId,
 
   },
@@ -57,6 +71,7 @@ const submitAssignmentSchema =new Schema <TSubmitAssignment>({
   course:{
     type:Schema.Types.ObjectId
   },
+ 
   fileUrl:{
     type: String
   },
@@ -66,4 +81,7 @@ const submitAssignmentSchema =new Schema <TSubmitAssignment>({
 })
 
 export const Assignment = model<TAssignment>('Assignment', assignmentSchema);
-export const SubmitAssignment = model<TSubmitAssignment>('SubmitAssignment', submitAssignmentSchema);
+export const SubmitAssignment = model(
+  'SubmitAssignment', 
+  submitAssignmentSchema
+);

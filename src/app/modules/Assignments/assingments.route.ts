@@ -13,7 +13,7 @@ const router = express.Router();
 
 router.post(
   '/upload/upload-any-file',
-  auth(['admin', 'superAdmin']),
+  auth([ 'superAdmin',"student","admin","admitted"]),
   // minioUpload.single('file'),
     upload.single('file'),
   
@@ -46,9 +46,14 @@ router.get(
   AssignmentControllers.getSingleAssignment,
 );
 router.post(
-  "/submit-assignment/:courseId/:assignmentId/:studentId",
-  auth(["student","admitted"]),
+  "/submit-assignment",
+  auth(["student","admitted","admin","superAdmin"]),
   validateRequest(AssignmentValidation.createAssignmentSubmitValidation),
   AssignmentControllers.submitAssignment
 )
+router.get(
+  '/submit-assignment/all-submitted-assignments',
+  // auth(["admin", "superAdmin","student","admitted"]),
+  AssignmentControllers.getAllSubmittedAssignments,
+);
 export const AssignmentRoutes = router;
