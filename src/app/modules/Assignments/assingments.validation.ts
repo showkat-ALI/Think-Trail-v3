@@ -20,7 +20,8 @@ const createAssignmentSubmitValidation = z.object({
     assignment: z.string(),
     course: z.string(),
     text: z.string(),
-    submittedBy: z.string()
+    submittedBy: z.string(),
+    createdBy:z.string()
   }),
 });
 

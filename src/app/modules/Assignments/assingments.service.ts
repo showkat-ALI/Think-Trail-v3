@@ -9,6 +9,8 @@ import { sendImageToCloudinary } from '../../utils/sendImageToCloudinary';
 import { v4 as uuidv4 } from 'uuid';
 import { sendVideoToCloudinary } from '../../utils/sendVideoToCloudinary';
 import mongoose from 'mongoose';
+import { User } from '../user/user.model';
+import  { TUser } from '../user/user.interface'; // Assuming IUser is the correct type for User
 
 
 const createAssignmentFileIntoDB = async (file: any) => {
@@ -87,7 +89,8 @@ const submitAssignmentIntoDB = async (req: Request) => {
       fileUrl: data.fileUrl,
       text: data.text,
       assignment:data.assignment,
-      comment: data.comment || '', // Optional field
+      comment: data.comment || '', 
+      createdBy:data.createdBy// Optional field
     });
 
     return { savedAssignment };
@@ -175,6 +178,43 @@ return { assignments }; // Return empty array instead of error
     );
   }
 };
+const getAllInsSubAssignmentsFromDB = async (req) => {
+  const { id } = req.params;
+
+  try {
+    // Step 1: Get all assignments created by the instructor
+    const assignments = await SubmitAssignment.find({ createdBy: id }).lean();
+
+    // Step 2: Extract unique submittedBy values
+    const submittedByIds = [...new Set(assignments.map(a => a.submittedBy))];
+
+    // Step 3: Find users where User.id matches submittedBy string
+    const users = await User.find({ id: { $in: submittedByIds } })
+      .select(' email roles id') // include custom `id` field
+      .lean();
+
+    const userMap: { [key: string]: TUser } = {};
+    users.forEach(user => {
+      userMap[user.id] = user;
+    });
+
+    // Step 5: Merge user data into each assignment
+    const enrichedAssignments = assignments.map(assignment => ({
+      ...assignment,
+      submittedBy: userMap[assignment.submittedBy] || null,
+    }));
+
+    return enrichedAssignments;
+
+  } catch (error) {
+    console.error(error);
+    throw new AppError(
+      httpStatus.INTERNAL_SERVER_ERROR,
+      'Error fetching assignments from the database',
+    );
+  }
+};
+
 
 export const AssignmentServices = {
   createAssignmentFileIntoDB,
@@ -184,5 +224,6 @@ export const AssignmentServices = {
   getSingleAssingment,
   submitAssignmentIntoDB,
   getAllSubmittedAssignments,
-  getSingleSubmittedAssignment
+  getSingleSubmittedAssignment,
+  getAllInsSubAssignmentsFromDB
 };

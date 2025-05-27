@@ -81,6 +81,17 @@ const getSingleSubmitAssignment = catchAsync(async (req, res) => {
     data: result,
   });
 });
+const getAllInsSubAssignments = catchAsync(async (req, res) => {
+  
+  const result =
+    await AssignmentServices.getAllInsSubAssignmentsFromDB(req);
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Assignment retrived successfully',
+    data: result,
+  });
+});
 
 
 export const AssignmentControllers = {
@@ -91,5 +102,6 @@ export const AssignmentControllers = {
   getSingleAssignment,
   submitAssignment,
   getAllSubmittedAssignments,
-  getSingleSubmitAssignment
+  getSingleSubmitAssignment,
+  getAllInsSubAssignments
 };

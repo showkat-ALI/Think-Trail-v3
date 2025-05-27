@@ -1,6 +1,5 @@
 import { Schema, model } from 'mongoose';
 import { TAssignment, TSubmitAssignment } from './assignments.interface';
-import { string } from 'zod';
 const SUBMISSION_ATTEMPTS = [
   'Five-attempts',
   'double-attempt',
