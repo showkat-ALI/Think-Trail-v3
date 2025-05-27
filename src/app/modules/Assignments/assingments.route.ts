@@ -56,4 +56,9 @@ router.get(
   // auth(["admin", "superAdmin","student","admitted"]),
   AssignmentControllers.getAllSubmittedAssignments,
 );
+router.get(
+  '/submit-assignment/single-assignment/:id/:studentId',
+  // auth(["admin", "superAdmin","student","admitted"]),
+  AssignmentControllers.getSingleSubmitAssignment,
+);
 export const AssignmentRoutes = router;

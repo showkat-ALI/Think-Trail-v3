@@ -17,15 +17,13 @@ export type TAssignment = {
     course: Types.ObjectId;
   }[];
 };
-export type TSubmitAssignment={
-  submittedBy:Types.ObjectId;
-  course:Types.ObjectId;
-  assignment:Types.ObjectId;
-  fileUrl:string;
-  comment:string;
-  text:string
-
-  
-
-
-}
+export type TSubmitAssignment = {
+  submittedBy: string;
+  course: string;
+  assignment: string;
+  fileUrl: string[];
+  comment: string;
+  text: string;
+  tags: string; // Added an array of strings
+  mark:number
+};

@@ -2,7 +2,6 @@ import httpStatus from 'http-status';
 import catchAsync from '../../utils/catchAsync';
 import sendResponse from '../../utils/sendResponse';
 import { AssignmentServices } from './assingments.service';
-import { reduceEachLeadingCommentRange } from 'typescript';
 
 const uploadFile = catchAsync(async (req, res) => {
   const result = await AssignmentServices.createAssignmentFileIntoDB(req.file);
@@ -71,6 +70,17 @@ const getAllSubmittedAssignments = catchAsync(async (req, res) => {
     data: result,
   });
 });
+const getSingleSubmitAssignment = catchAsync(async (req, res) => {
+  
+  const result =
+    await AssignmentServices.getSingleSubmittedAssignment(req);
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Assignment retrived successfully',
+    data: result,
+  });
+});
 
 
 export const AssignmentControllers = {
@@ -80,5 +90,6 @@ export const AssignmentControllers = {
   uploadModuleVideo,
   getSingleAssignment,
   submitAssignment,
-  getAllSubmittedAssignments
+  getAllSubmittedAssignments,
+  getSingleSubmitAssignment
 };

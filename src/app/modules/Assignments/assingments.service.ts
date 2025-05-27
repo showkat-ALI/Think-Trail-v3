@@ -8,9 +8,8 @@ import { Assignment, SubmitAssignment } from './assignments.model';
 import { sendImageToCloudinary } from '../../utils/sendImageToCloudinary';
 import { v4 as uuidv4 } from 'uuid';
 import { sendVideoToCloudinary } from '../../utils/sendVideoToCloudinary';
-import { User } from '../user/user.model';
-import { Course } from '../Course/course.model';
 import mongoose from 'mongoose';
+
 
 const createAssignmentFileIntoDB = async (file: any) => {
   try {
@@ -60,50 +59,40 @@ const createAssignmentIntoDB = async (req: Request) => {
     );
   }
 };
-const submitAssignmentIntoDB = async (req:any) => {
-  // const { studentId, assignmentId, courseId } = req.params;
-
-  // Validate IDs
-  // if (!studentId || !assignmentId || !courseId) {
-  //   throw new AppError(
-  //     httpStatus.BAD_REQUEST,
-  //     'studentId, assignmentId, and courseId are required parameters',
-  //   );
-  // }
-
+const submitAssignmentIntoDB = async (req: Request) => {
   try {
-  //   // Check if the assignment exists
-  //   const assignmentExists = await Assignment.findById(assignmentId);
-  //   if (!assignmentExists) {
-  //     throw new AppError(
-  //       httpStatus.NOT_FOUND,
-  //       'Assignment not found',
-  //     );
-  //   }
-
-  //   // Check if the student exists (assuming you have a Student model)
-  //   const studentExists = await User.findById(studentId);
-  //   if (!studentExists) {
-  //     throw new AppError(
-  //       httpStatus.NOT_FOUND,
-  //       'Student not found',
-  //     );
-  //   }
-
-  //   // Check if the course exists (assuming you have a Course model)
-  //   const courseExists = await Course.findById(courseId);
-  //   if (!courseExists) {
-  //     throw new AppError(
-  //       httpStatus.NOT_FOUND,
-  //       'Course not found',
-  //     );
-  //   }
-
     // Create the submission
     const data = req.body;
-    const savedAssignment = await SubmitAssignment.create(data);
+
+    // Validate required fields
+    if (!data.submittedBy || !data.course || !data.fileUrl || !data.text) {
+      throw new AppError(
+        httpStatus.BAD_REQUEST,
+        'Missing required fields: submittedBy, course, fileUrl, or text',
+      );
+    }
+
+    // Ensure fileUrl is an array
+    if (!Array.isArray(data.fileUrl)) {
+      throw new AppError(
+        httpStatus.BAD_REQUEST,
+        'fileUrl must be an array',
+      );
+    }
+
+    // Save the assignment
+    const savedAssignment = await SubmitAssignment.create({
+      submittedBy: data.submittedBy,
+      course: data.course,
+      fileUrl: data.fileUrl,
+      text: data.text,
+      assignment:data.assignment,
+      comment: data.comment || '', // Optional field
+    });
+
     return { savedAssignment };
   } catch (error) {
+    console.log(error)
     throw new AppError(
       httpStatus.INTERNAL_SERVER_ERROR,
       'Error creating assignment in the database',
@@ -151,6 +140,25 @@ const getSingleAssingment = async (id:any) => {
     );
   }
 };
+const getSingleSubmittedAssignment = async (req:any) => {
+  const {studentId,id}=req.params
+  
+
+ 
+
+  try {
+    const objectId = new mongoose.Types.ObjectId(id);
+    const assignment = await Assignment.findById({ _id: objectId });
+    const submittedAssignment= await SubmitAssignment.findOne({assignment:id,submittedBy:studentId})
+
+    return { assignment,submittedAssignment };
+  } catch (error) {
+    throw new AppError(
+      httpStatus.INTERNAL_SERVER_ERROR,
+      'Error fetching assignment from the database',
+    );
+  }
+};
 const getAllSubmittedAssignments = async () => {
   try {
     
@@ -175,5 +183,6 @@ export const AssignmentServices = {
   createModuleVideoIntoDB,
   getSingleAssingment,
   submitAssignmentIntoDB,
-  getAllSubmittedAssignments
+  getAllSubmittedAssignments,
+  getSingleSubmittedAssignment
 };
