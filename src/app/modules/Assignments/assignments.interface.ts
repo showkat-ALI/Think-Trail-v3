@@ -25,5 +25,6 @@ export type TSubmitAssignment = {
   comment: string;
   text: string;
   tags: string; // Added an array of strings
-  mark:number
+  mark:number;
+  createdBy:string
 };

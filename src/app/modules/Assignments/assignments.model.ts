@@ -83,6 +83,9 @@ const submitAssignmentSchema = new Schema<TSubmitAssignment>({
   mark:{
     type:Number
   },
+  createdBy:{
+    type:String
+  }
 }, { timestamps: true });
 
 export const Assignment = model<TAssignment>('Assignment', assignmentSchema);
