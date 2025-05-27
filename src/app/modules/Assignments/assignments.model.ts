@@ -82,6 +82,7 @@ const submitAssignmentSchema = new Schema<TSubmitAssignment>({
   mark:{
     type:Number
   },
+  grade:{type:String},
   createdBy:{
     type:String
   }

@@ -26,5 +26,6 @@ export type TSubmitAssignment = {
   text: string;
   tags: string; // Added an array of strings
   mark:number;
-  createdBy:string
+  createdBy:string;
+  grade:string
 };

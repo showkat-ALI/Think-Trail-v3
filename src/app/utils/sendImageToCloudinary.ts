@@ -19,7 +19,7 @@ export const sendImageToCloudinary = (
       path,
       {
         public_id: fileName.trim(),
-        resource_type: 'image', // Use the correct resource type
+        resource_type: 'auto', // Use the correct resource type
         chunk_size: 30000000, // 30 MB
         upload_preset: 'showkat', // Add your preset name here
       },
