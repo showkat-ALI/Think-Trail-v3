@@ -143,7 +143,7 @@ const getSingleAssingment = async (id:any) => {
     );
   }
 };
-const getSingleSubmittedAssignment = async (req:any) => {
+const getSingleSubmittedAssignment = async (req:Request) => {
   const {studentId,id}=req.params
   
 
@@ -178,7 +178,7 @@ return { assignments }; // Return empty array instead of error
     );
   }
 };
-const getAllInsSubAssignmentsFromDB = async (req) => {
+const getAllInsSubAssignmentsFromDB = async (req:Request) => {
   const { id } = req.params;
 
   try {
