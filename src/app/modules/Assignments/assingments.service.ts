@@ -207,7 +207,6 @@ const getAllInsSubAssignmentsFromDB = async (req) => {
     return enrichedAssignments;
 
   } catch (error) {
-    console.error(error);
     throw new AppError(
       httpStatus.INTERNAL_SERVER_ERROR,
       'Error fetching assignments from the database',
