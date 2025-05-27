@@ -11,6 +11,7 @@ import { sendVideoToCloudinary } from '../../utils/sendVideoToCloudinary';
 import mongoose from 'mongoose';
 import { User } from '../user/user.model';
 import  { TUser } from '../user/user.interface'; // Assuming IUser is the correct type for User
+import { Student } from '../Student/student.model';
 
 
 const createAssignmentFileIntoDB = async (file: any) => {
@@ -152,9 +153,27 @@ const getSingleSubmittedAssignment = async (req:Request) => {
   try {
     const objectId = new mongoose.Types.ObjectId(id);
     const assignment = await Assignment.findById({ _id: objectId });
-    const submittedAssignment= await SubmitAssignment.findOne({assignment:id,submittedBy:studentId})
-
-    return { assignment,submittedAssignment };
+    const submittedAssignment = await SubmitAssignment.findOne({
+      assignment: id,
+      submittedBy: studentId,
+    }).lean();
+    
+    if (!submittedAssignment) {
+      throw new AppError(httpStatus.NOT_FOUND, 'Submitted assignment not found');
+    }
+    
+    // Now find the User with custom "id" field matching "submittedBy"
+    const user = await Student.findOne({ id: submittedAssignment.submittedBy })
+      .select(' email  id name') // Only select needed fields
+      .lean();
+    
+    // Attach user info to assignment
+    const enrichedAssignment = {
+      ...submittedAssignment,
+      submittedBy: user || null, // attach user data or null
+    };
+    
+    return { assignment,submittedAssignment,enrichedAssignment };
   } catch (error) {
     throw new AppError(
       httpStatus.INTERNAL_SERVER_ERROR,
