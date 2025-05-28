@@ -2,10 +2,10 @@ import httpStatus from 'http-status';
 // import fs from 'fs';
 import AppError from '../../errors/AppError';
 
-import { Request } from 'express';
+import { Request, Express } from 'express';
 import { Assignment, SubmitAssignment } from './assignments.model';
 // import { minioClient } from '../../minio-config/minioConfig';
-import { sendImageToCloudinary } from '../../utils/sendImageToCloudinary';
+import { sendFileToCloudinary,  } from '../../utils/sendImageToCloudinary';
 import { v4 as uuidv4 } from 'uuid';
 import { sendVideoToCloudinary } from '../../utils/sendVideoToCloudinary';
 import mongoose from 'mongoose';
@@ -14,23 +14,33 @@ import  { TUser } from '../user/user.interface'; // Assuming IUser is the correc
 import { Student } from '../Student/student.model';
 
 
-const createAssignmentFileIntoDB = async (file: any) => {
+const createAssignmentFileIntoDB = async (file: Express.Multer.File) => {
   try {
-    if (file) {
-      const fileName = uuidv4();
-      const path = file?.path;
 
-      //send file to cloudinary
-      const { secure_url } = await sendImageToCloudinary(fileName, path);
-      return secure_url;
+    if (!file) {
+      throw new AppError(httpStatus.BAD_REQUEST, 'No file provided');
     }
-  } catch (error) {
+
+    const fileName = uuidv4() + getExtension(file.originalname); // Keep original extension
+    const localPath = file.path;
+
+   
+
+    const { url } = await sendFileToCloudinary(fileName, localPath);
+    return url;
+
+  } catch (error: any) {
     throw new AppError(
       httpStatus.INTERNAL_SERVER_ERROR,
-      'Error uploading file to Cloudinary',
+      'Error uploading file to Cloudinary'
     );
   }
 };
+
+// Helper to get original file extension
+function getExtension(filename: string): string {
+  return '.' + filename.split('.').pop();
+}
 const createModuleVideoIntoDB = async (file: any) => {
   try {
     if (file) {
