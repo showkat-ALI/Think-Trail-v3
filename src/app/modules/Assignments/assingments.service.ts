@@ -261,7 +261,7 @@ const postAssignmentMarkToDB = async (req: Request) => {
     );
 
     if (!updatedAssignment) {
-      throw new AppError(httpStatus.NOT_FOUND, 'Assignment not found');
+      throw new AppError(httpStatus.NOT_FOUND, 'SubmittedAssignment not found');
     }
 
     return { updatedAssignment };
