@@ -4,6 +4,9 @@ import sendResponse from '../../utils/sendResponse';
 import { AssignmentServices } from './assingments.service';
 
 const uploadFile = catchAsync(async (req, res) => {
+  if (!req.file) {
+    throw new Error('File is missing in the request');
+  }
   const result = await AssignmentServices.createAssignmentFileIntoDB(req.file);
   sendResponse(res, {
     statusCode: httpStatus.OK,

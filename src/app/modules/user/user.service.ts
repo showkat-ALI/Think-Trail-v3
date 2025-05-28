@@ -4,7 +4,7 @@ import httpStatus from 'http-status';
 import mongoose from 'mongoose';
 import config from '../../config';
 import AppError from '../../errors/AppError';
-import { sendImageToCloudinary } from '../../utils/sendImageToCloudinary';
+// import { sendImageToCloudinary } from '../../utils/sendImageToCloudinary';
 // import { AcademicDepartment } from '../AcademicDepartment/academicDepartment.model';
 import { AcademicSemester } from '../AcademicSemester/academicSemester.model';
 import { TAdmin } from '../Admin/admin.interface';
@@ -21,6 +21,7 @@ import emailSender, {
   generateStudentId,
 } from './user.utils';
 import { SuperAdmin } from '../SuperAdmin/admin.model';
+import { sendFileToCloudinary } from '../../utils/sendImageToCloudinary';
 
 const createStudentIntoDB = async (payload: TStudent) => {
   const userData: Partial<TUser> = {};
@@ -144,7 +145,7 @@ const createFacultyIntoDB = async (
       const imageName = `${userData.id}${payload?.name?.firstName}`;
       const path = file?.path;
       //send image to cloudinary
-      const { secure_url } = await sendImageToCloudinary(imageName, path);
+      const { secure_url } = await sendFileToCloudinary(imageName, path);
       payload.profileImg = secure_url as string;
     }
 
@@ -204,7 +205,7 @@ const createAdminIntoDB = async (
       const imageName = `${userData.id}${payload?.name?.firstName}`;
       const path = file?.path;
       //send image to cloudinary
-      const { secure_url } = await sendImageToCloudinary(imageName, path);
+      const { secure_url } = await sendFileToCloudinary(imageName, path);
       payload.profileImg = secure_url as string;
     }
 
@@ -263,7 +264,7 @@ const createSuperAdminIntoDB = async (
       const imageName = `${userData.id}${payload?.name?.firstName}`;
       const path = file?.path;
       //send image to cloudinary
-      const { secure_url } = await sendImageToCloudinary(imageName, path);
+      const { secure_url } = await sendFileToCloudinary(imageName, path);
       payload.profileImg = secure_url as string;
     }
 
