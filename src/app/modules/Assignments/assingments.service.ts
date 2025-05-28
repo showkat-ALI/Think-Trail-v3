@@ -239,6 +239,40 @@ const getAllInsSubAssignmentsFromDB = async (req:Request) => {
     );
   }
 };
+const postAssignmentMarkToDB = async (req: Request) => {
+  const { id } = req.params;
+  const { grade, mark, inscomment } = req.body;
+
+  if (!id) {
+    throw new AppError(
+      httpStatus.BAD_REQUEST,
+      'id is missing',
+    );
+  }
+
+  try {
+    // Find the assignment by ID and update the grade, mark, and comment
+    const updatedAssignment = await SubmitAssignment.findByIdAndUpdate(
+      id,
+      { grade, mark, 
+        inscomment
+       },
+      { new: true } // Return the updated document
+    );
+
+    if (!updatedAssignment) {
+      throw new AppError(httpStatus.NOT_FOUND, 'Assignment not found');
+    }
+
+    return { updatedAssignment };
+  } catch (error) {
+    console.error('Error updating assignment:', error);
+    throw new AppError(
+      httpStatus.INTERNAL_SERVER_ERROR,
+      'Error updating assignment in the database',
+    );
+  }
+};
 
 
 export const AssignmentServices = {
@@ -250,5 +284,6 @@ export const AssignmentServices = {
   submitAssignmentIntoDB,
   getAllSubmittedAssignments,
   getSingleSubmittedAssignment,
-  getAllInsSubAssignmentsFromDB
+  getAllInsSubAssignmentsFromDB,
+  postAssignmentMarkToDB
 };

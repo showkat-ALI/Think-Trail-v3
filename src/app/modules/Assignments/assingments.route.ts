@@ -66,4 +66,9 @@ router.get(
   // auth(["admin", "superAdmin","student","admitted"]),
   AssignmentControllers.getAllInsSubAssignments,
 );
+router.post(
+  '/assignment-marking/:id',
+  // auth(["admin", "superAdmin","student","admitted"]),
+  AssignmentControllers.postAssignmentMark,
+);
 export const AssignmentRoutes = router;

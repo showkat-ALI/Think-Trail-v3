@@ -95,6 +95,17 @@ const getAllInsSubAssignments = catchAsync(async (req, res) => {
     data: result,
   });
 });
+const postAssignmentMark = catchAsync(async (req, res) => {
+  
+  const result =
+    await AssignmentServices.postAssignmentMarkToDB(req);
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Assignment retrived successfully',
+    data: result,
+  });
+});
 
 
 export const AssignmentControllers = {
@@ -106,5 +117,6 @@ export const AssignmentControllers = {
   submitAssignment,
   getAllSubmittedAssignments,
   getSingleSubmitAssignment,
-  getAllInsSubAssignments
+  getAllInsSubAssignments,
+  postAssignmentMark
 };

@@ -85,6 +85,9 @@ const submitAssignmentSchema = new Schema<TSubmitAssignment>({
   grade:{type:String},
   createdBy:{
     type:String
+  },
+  inscomment:{
+    type:String
   }
 }, { timestamps: true });
 
