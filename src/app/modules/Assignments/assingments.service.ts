@@ -16,7 +16,6 @@ import { Student } from '../Student/student.model';
 
 const createAssignmentFileIntoDB = async (file: Express.Multer.File) => {
   try {
-
     if (!file) {
       throw new AppError(httpStatus.BAD_REQUEST, 'No file provided');
     }
@@ -24,10 +23,8 @@ const createAssignmentFileIntoDB = async (file: Express.Multer.File) => {
     const fileName = uuidv4() + getExtension(file.originalname); // Keep original extension
     const localPath = file.path;
 
-   
-
     const { url } = await sendFileToCloudinary(fileName, localPath);
-    return url;
+    return {  fileUrl: url  }; // Return the file URL in the desired format
 
   } catch (error: any) {
     throw new AppError(
