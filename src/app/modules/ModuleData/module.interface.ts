@@ -18,6 +18,10 @@ export type TModuleAssignment = {
   module: Types.ObjectId;
   assignment: Types.ObjectId;
 };
+export type TModuleQuiz = {
+  module: Types.ObjectId;
+  quiz: Types.ObjectId;
+};
 export type TCoursefaculty = {
   course: Types.ObjectId;
   faculties: [Types.ObjectId];

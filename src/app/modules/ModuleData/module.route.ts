@@ -28,7 +28,18 @@ router.get(
   auth(['admin', 'faculty', 'instructor', 'student', 'superAdmin']),
   CourseControllers.getSingleModuleAssignment,
 );
+router.get(
+  '/get-single-module-quiz/:id',
+  auth(['admin', 'faculty', 'instructor', 'student', 'superAdmin']),
+  CourseControllers.getSingleModuleQuiz,
+);
+router.post(
+  '/add-module-quiz',
+  auth(['admin', 'superAdmin',"instructor","student"]),
+  validateRequest(CourseValidations.createModuleQuizValidation),
 
+  CourseControllers.createModuleQuiz,
+);
 // router.get(
 //   '/',
 //   auth(['admin', 'faculty', 'instructor', 'student', 'superAdmin']),

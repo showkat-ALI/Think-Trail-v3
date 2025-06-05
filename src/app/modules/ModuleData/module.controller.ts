@@ -58,11 +58,33 @@ const getSingleModuleAssignment = catchAsync(async (req, res) => {
     data: result,
   });
 });
+const getSingleModuleQuiz = catchAsync(async (req, res) => {
+  const { id } = req.params;
+  const result = await CourseServices.getSingleModuleQuizFromDB(id);
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Course is retrieved succesfully',
+    data: result,
+  });
+});
+const createModuleQuiz = catchAsync(async (req, res) => {
+  const result = await CourseServices.createQuizofModule(req.body);
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'question uploaded successfully',
+    data: result,
+  });
+});
 
 export const CourseControllers = {
   createCourse,
   getSingleCourse,
   createCourseAssignment,
   getSingleModuleAssignment,
+  createModuleQuiz,
+  getSingleModuleQuiz
   // getAllCourses,
 };

@@ -15,7 +15,25 @@ const createQuizValidation = z.object({
     createdBy: z.string(),
   }),
 });
-
+const submitQuizValidation = z.object({
+  body: z.object({
+    quiz: z.string(),
+    course: z.string(),
+    answers: z.array(
+      z.object({
+        question: z.string(),
+        answer: z.string(),
+      })
+    ),
+    score: z.number(),
+    totalQuestions: z.number(),
+    submittedBy: z.object({
+      name: z.string(),
+      email: z.string(),
+    }),
+  }),
+});
 export const QuizValidation = {
   createQuizValidation,
+  submitQuizValidation
 };

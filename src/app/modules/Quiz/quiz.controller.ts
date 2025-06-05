@@ -21,8 +21,36 @@ const createQuestion = catchAsync(async (req, res) => {
     data: result,
   });
 });
+const createSubmitQuiz = catchAsync(async (req, res) => {
+  const result = await QuizServices.createSubmitQuizInDB(req);
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'question uploaded successfully',
+    data: result,
+  });
+});
+
 const getAllQuestionsOfAIns = catchAsync(async (req, res) => {
   const result = await QuizServices.getallQuestionsOfAInsFromDB(req);
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'all questions retrieved successfully',
+    data: result,
+  });
+});
+const getSingleQuizQuestion = catchAsync(async (req, res) => {
+  const result = await QuizServices.getSingleQuizQuestions(req);
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'all questions retrieved successfully',
+    data: result,
+  });
+});
+const getAllSubQuiz = catchAsync(async (req, res) => {
+  const result = await QuizServices.getAllSubQuizFromDB();
   sendResponse(res, {
     statusCode: httpStatus.OK,
     success: true,
@@ -35,4 +63,8 @@ export const QuizControllers = {
   createQuiz,
   createQuestion,
   getAllQuestionsOfAIns,
+  getSingleQuizQuestion,
+  createSubmitQuiz,
+  getAllSubQuiz
+  
 };

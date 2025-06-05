@@ -7,8 +7,9 @@ import { Course } from './course.model';
 import { Admission } from '../Admission/module.model';
 import { Admin } from '../Admin/admin.model';
 import { Module } from '../Module/module.model';
-import { ModuleAssignment, ModuleVideo } from '../ModuleData/module.model';
+import { ModuleAssignment, ModuleQuiz, ModuleVideo } from '../ModuleData/module.model';
 import { Assignment } from '../Assignments/assignments.model';
+import { Question, Quiz } from '../Quiz/quiz.model';
 
 const createCourseIntoDB = async (payload: TCourse) => {
   try {
@@ -56,13 +57,35 @@ const assignment= await ModuleAssignment.find({module:{ $in: moduleIds }})
 const moduleAssignment = await Assignment.find({
   _id: { $in: assignment.map(a => a.assignment) }
 });
+const moduleQuizzes = await ModuleQuiz.find({ module: { $in: moduleIds } }).populate({
+  path: 'quiz',
+  model: 'Quiz',
+});
+
+const quizzesWithQuestions = await Promise.all(
+  moduleQuizzes.map(async (moduleQuiz) => {
+    const quiz = await Quiz.findById(moduleQuiz.quiz);
+    if (quiz) {
+      const questions = await Question.find({ quiz: quiz._id });
+      return {
+        ...moduleQuiz.toObject(),
+        quiz: {
+          ...quiz.toObject(),
+          questions,
+        },
+      };
+    }
+    return moduleQuiz;
+  })
+);
 
 return {
   course,
   module,
   moduleVideo,
   assignment,
-  moduleAssignment
+  moduleAssignment,
+  quizzesWithQuestions
 };
 };
 const getAllmyCourse = async (id: string) => {

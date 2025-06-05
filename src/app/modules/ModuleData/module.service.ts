@@ -2,9 +2,11 @@ import httpStatus from 'http-status';
 // import QueryBuilder from '../../builder/QueryBuilder';
 import AppError from '../../errors/AppError';
 // import { CourseSearchableFields } from './Module.constant';
-import { ModuleAssignment, ModuleVideo } from './module.model';
+import { ModuleAssignment, ModuleQuiz, ModuleVideo } from './module.model';
 import { TModuleAssignment, TModuleVideo } from './module.interface';
 import { Module } from '../Module/module.model';
+import { Question, Quiz } from '../Quiz/quiz.model';
+import { Types } from 'mongoose';
 
 const createCourseIntoDB = async (payload: TModuleVideo) => {
   try {
@@ -74,6 +76,34 @@ const getSingleCourseFromDB = async (id: string) => {
   }
   return result;
 };
+const getSingleModuleQuizFromDB = async (id: string) => {
+  const moduleQuizzes = await ModuleQuiz.find({ module: id }).populate({
+    path: 'quiz',
+    model: 'Quiz',
+  });
+
+  const result = await Promise.all(
+    moduleQuizzes.map(async (moduleQuiz) => {
+      const quiz = await Quiz.findById(moduleQuiz.quiz);
+      if (quiz) {
+        const questions = await Question.find({ quiz: quiz._id });
+        return {
+          ...moduleQuiz.toObject(),
+          quiz: {
+            ...quiz.toObject(),
+            questions,
+          },
+        };
+      }
+      return moduleQuiz;
+    })
+  );
+  if (!result) {
+    throw new AppError(httpStatus.NOT_FOUND, 'Module quiz not found');
+  }
+  return result;
+};
+
 const getSingleModuleAssignmentFromDB = async (id: string) => {
   const result = await ModuleAssignment.find({ module: id }).populate(
     'assignment',
@@ -84,6 +114,27 @@ const getSingleModuleAssignmentFromDB = async (id: string) => {
   }
   return result;
 };
+const createQuizofModule = async (payload:any) => {
+  // console.log(payload)
+  try {
+    // Assuming you have a function to save the assignment data to the database
+    const quiz = await Quiz.findById({ _id: new Types.ObjectId(payload.quiz) });
+    if (!quiz) {
+      throw new AppError(httpStatus.NOT_FOUND, 'Quiz not found');
+    }
+    if (quiz) {
+      const savedQuestion = await ModuleQuiz.create(payload);
+
+      return { savedQuestion };
+    }
+  } catch (error) {
+    // console.log(error)
+    throw new AppError(
+      httpStatus.INTERNAL_SERVER_ERROR,
+      'Error creating Question in the database',
+    );
+  }
+};
 
 export const CourseServices = {
   createCourseIntoDB,
@@ -91,4 +142,6 @@ export const CourseServices = {
   getSingleCourseFromDB,
   createAssignmentModuleIntoDB,
   getSingleModuleAssignmentFromDB,
+  createQuizofModule,
+  getSingleModuleQuizFromDB,
 };

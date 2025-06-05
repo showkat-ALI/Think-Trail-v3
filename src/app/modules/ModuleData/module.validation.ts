@@ -17,6 +17,12 @@ const createModuleAssignmentValidation = z.object({
     module: z.string(),
   }),
 });
+const createModuleQuizValidation = z.object({
+  body: z.object({
+    quiz: z.string(),
+    module: z.string(),
+  }),
+});
 
 const updatePreRequisiteCourseValidationSchema = z.object({
   course: z.string(),
@@ -47,4 +53,5 @@ export const CourseValidations = {
   updateCourseValidationSchema,
   facultiesWithCourseValidationSchema,
   createModuleAssignmentValidation,
+  createModuleQuizValidation
 };

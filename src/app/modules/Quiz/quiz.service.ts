@@ -2,7 +2,7 @@ import httpStatus from 'http-status';
 import AppError from '../../errors/AppError';
 
 import { Request } from 'express';
-import { Question, Quiz } from './quiz.model';
+import { Question, Quiz, SubmitQuiz } from './quiz.model';
 
 const createQuizIntoDB = async (req: Request) => {
   const data = req.body;
@@ -14,6 +14,36 @@ const createQuizIntoDB = async (req: Request) => {
     throw new AppError(
       httpStatus.INTERNAL_SERVER_ERROR,
       'Error creating quiz in the database',
+    );
+  }
+};
+const createSubmitQuizInDB = async (req: Request) => {
+  const data = req.body;
+  try {
+    // Assuming you have a function to save the assignment data to the database
+    const savedQuiz = await SubmitQuiz.create(data);
+    return { savedQuiz };
+  } catch (error) {
+      console.log(error);
+
+    throw new AppError(
+      httpStatus.INTERNAL_SERVER_ERROR,
+      'Error creating quiz in the database',
+    );
+  }
+};
+const getAllSubQuizFromDB = async () => {
+  try {
+    // Assuming you have a function to save the assignment data to the database
+    const savedQuiz = await SubmitQuiz.find();
+    return { savedQuiz };
+  } catch (error) {
+     
+    
+
+    throw new AppError(
+      httpStatus.INTERNAL_SERVER_ERROR,
+      'Error getting quiz in the database',
     );
   }
 };
@@ -37,6 +67,21 @@ const createQuestionOfQuiz = async (req: Request) => {
     );
   }
 };
+const getSingleQuizQuestions = async (req: Request) => {
+  const id = req.params.quiz
+  const quiz = await Quiz.findById({ _id: id });
+  if (quiz) {
+    const questions = await Question.find({ quiz: quiz._id });
+    return {
+      quiz: {
+        ...quiz.toObject(),
+        questions,
+      },
+    };
+  }
+  throw new AppError(httpStatus.NOT_FOUND, 'Quiz not found');
+};
+
 const getallQuestionsOfAInsFromDB = async (req: Request) => {
   const userID = req.params.userID;
   try {
@@ -92,4 +137,9 @@ export const QuizServices = {
   createQuizIntoDB,
   createQuestionOfQuiz,
   getallQuestionsOfAInsFromDB,
+  getSingleQuizQuestions,
+  createSubmitQuizInDB,
+  getAllSubQuizFromDB
+
+  
 };
