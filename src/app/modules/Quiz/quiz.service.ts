@@ -24,7 +24,6 @@ const createSubmitQuizInDB = async (req: Request) => {
     const savedQuiz = await SubmitQuiz.create(data);
     return { savedQuiz };
   } catch (error) {
-      console.log(error);
 
     throw new AppError(
       httpStatus.INTERNAL_SERVER_ERROR,
