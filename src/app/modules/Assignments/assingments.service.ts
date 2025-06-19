@@ -12,6 +12,7 @@ import mongoose from 'mongoose';
 import { User } from '../user/user.model';
 import  { TUser } from '../user/user.interface'; // Assuming IUser is the correct type for User
 import { Student } from '../Student/student.model';
+import { Course } from '../Course/course.model';
 
 
 const createAssignmentFileIntoDB = async (file: Express.Multer.File) => {
@@ -208,26 +209,24 @@ const getAllInsSubAssignmentsFromDB = async (req:Request) => {
   const { id } = req.params;
 
   try {
-    // Step 1: Get all assignments created by the instructor
+    // Fetch all assignments created by the instructor
     const assignments = await SubmitAssignment.find({ createdBy: id }).lean();
 
-    // Step 2: Extract unique submittedBy values
-    const submittedByIds = [...new Set(assignments.map(a => a.submittedBy))];
-
-    // Step 3: Find users where User.id matches submittedBy string
+    // Fetch users who submitted assignments
+    const submittedByIds = assignments.map(a => a.submittedBy);
     const users = await User.find({ id: { $in: submittedByIds } })
-      .select(' email roles id') // include custom `id` field
+      .select('email roles id')
       .lean();
 
-    const userMap: { [key: string]: TUser } = {};
-    users.forEach(user => {
-      userMap[user.id] = user;
-    });
+    // Attach user data to assignments
+    const courses = await Course.find({ _id: { $in: assignments.map(a => a.course) } })
+      .select('_id title')
+      .lean();
 
-    // Step 5: Merge user data into each assignment
     const enrichedAssignments = assignments.map(assignment => ({
       ...assignment,
-      submittedBy: userMap[assignment.submittedBy] || null,
+      submittedBy: users.find(user => user.id === assignment.submittedBy) || null,
+      course: courses.find(course => course._id.toString() === assignment.course.toString()) || null,
     }));
 
     return enrichedAssignments;
