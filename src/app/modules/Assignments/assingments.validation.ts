@@ -15,13 +15,13 @@ const createAssignmentValidation = z.object({
 });
 const createAssignmentSubmitValidation = z.object({
   body: z.object({
-    fileUrl: z.array(z.string()),
+    fileUrl: z.array(z.object({ fileUrl: z.string().url() })),
     comment: z.string().optional(),
     assignment: z.string(),
     course: z.string(),
     text: z.string(),
     submittedBy: z.string(),
-    createdBy:z.string()
+    createdBy: z.string()
   }),
 });
 

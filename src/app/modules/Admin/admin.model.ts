@@ -25,7 +25,7 @@ const adminSchema = new Schema<TAdmin, AdminModel>(
   {
     id: {
       type: String,
-      required: [true, 'ID is required'],
+      // required: [true, 'ID is required'],
       unique: true,
     },
     user: {
@@ -54,7 +54,6 @@ const adminSchema = new Schema<TAdmin, AdminModel>(
     email: {
       type: String,
       required: [true, 'Email is required'],
-      unique: true,
     },
     contactNo: { type: String, required: [true, 'Contact number is required'] },
     emergencyContactNo: {

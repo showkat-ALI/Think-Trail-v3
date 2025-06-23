@@ -9,7 +9,6 @@ const SUBMISSION_ATTEMPTS = [
 const assignmentSchema = new Schema<TAssignment>({
   name: {
     type: String,
-    unique: true,
     trim: true,
   },
   description: {
@@ -70,9 +69,9 @@ const submitAssignmentSchema = new Schema<TSubmitAssignment>({
   course: {
     type:String,
   },
-  fileUrl: {
-    type: [String],
-  },
+  fileUrl: [{
+    fileUrl: String
+  }],
   text: {
     type: String,
   },

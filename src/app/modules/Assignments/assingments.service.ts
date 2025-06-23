@@ -10,7 +10,6 @@ import { v4 as uuidv4 } from 'uuid';
 import { sendVideoToCloudinary } from '../../utils/sendVideoToCloudinary';
 import mongoose from 'mongoose';
 import { User } from '../user/user.model';
-import  { TUser } from '../user/user.interface'; // Assuming IUser is the correct type for User
 import { Student } from '../Student/student.model';
 import { Course } from '../Course/course.model';
 
@@ -64,9 +63,10 @@ const createAssignmentIntoDB = async (req: Request) => {
     const savedAssignment = await Assignment.create(data);
     return { savedAssignment };
   } catch (error) {
+
     throw new AppError(
       httpStatus.INTERNAL_SERVER_ERROR,
-      'Error creating assignment in the database',
+      `Error creating assignment in the database${error}`,
     );
   }
 };

@@ -8,6 +8,7 @@ import { createFacultyValidationSchema } from '../Faculty/faculty.validation';
 import { createStudentValidationSchema } from '../Student/student.validation';
 import { UserControllers } from './user.controller';
 import { UserValidation } from './user.validation';
+import AppError from '../../errors/AppError';
 
 const router = express.Router();
 router.post(
@@ -36,16 +37,37 @@ router.post(
   UserControllers.createFaculty,
 );
 
+const parseAdminData = (req: Request, res: Response, next: NextFunction) => {
+  if (!req.body.data) {
+    if (req.body.admin) {
+      // Handle case where data is already parsed
+      return next();
+    }
+    throw new AppError(400, "Form-data field 'data' is required");
+  }
+
+  try {
+    const parsed = JSON.parse(req.body.data);
+    req.body = {
+      ...parsed,
+      // Preserve the file reference
+      file: req.file 
+    };
+    next();
+  } catch (error) {
+    throw new AppError(400, "Invalid JSON in 'data' field");
+  }
+};
+
+// Usage:
 router.post(
   '/create-admin',
-  auth(['superAdmin', 'admin']),
+  auth(['superAdmin']),
   upload.single('file'),
-  (req: Request, res: Response, next: NextFunction) => {
-    req.body = JSON.parse(req.body.data);
-    next();
-  },
+  parseAdminData,
   validateRequest(createAdminValidationSchema),
-  UserControllers.createAdmin,
+
+  UserControllers.createAdmin
 );
 router.post(
   '/create-superAdmin',

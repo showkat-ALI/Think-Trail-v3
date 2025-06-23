@@ -92,7 +92,7 @@ const getAllmyCourse = async (id: string) => {
   const admission = await Admission.findOne({
     id: id,
     roles: { $all: ["student", "admitted"] },
-    status: "accepted"
+    // status: "accepted"
   }).populate('program');
 
 if (!admission) {
