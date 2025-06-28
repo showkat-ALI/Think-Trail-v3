@@ -40,11 +40,17 @@ router.get(
   auth(['admin', 'superAdmin']),
   AssignmentControllers.getAssignmentsByInstructor,
 );
+
 router.get(
   '/:id',
   auth(['admin', 'superAdmin',"student","admitted"]),
   AssignmentControllers.getSingleAssignment,
 );
+router.delete(
+  '/deleteOneAssignment/:id',
+  auth(['admin', 'superAdmin',"student","admitted"]),
+  AssignmentControllers.deleteSingleAssignment,
+)
 router.post(
   "/submit-assignment",
   auth(["student","admitted","admin","superAdmin"]),

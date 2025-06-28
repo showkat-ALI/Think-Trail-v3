@@ -152,6 +152,29 @@ const getSingleAssingment = async (id:any) => {
     );
   }
 };
+const deleteSingleAssignmentFromDB = async (id:any) => {
+  
+
+  if (!id) {
+    throw new AppError(
+      httpStatus.BAD_REQUEST,
+      'createdBy query parameter is required',
+    );
+  }
+
+  try {
+    const deletedAssignment = await Assignment.findByIdAndDelete({ _id: id });
+    if (!deletedAssignment) {
+      throw new AppError(httpStatus.NOT_FOUND, 'Assignment not found');
+    }
+    return { message: 'Assignment deleted successfully', deletedAssignment };
+  } catch (error) {
+    throw new AppError(
+      httpStatus.INTERNAL_SERVER_ERROR,
+      'Error fetching assignments from the database',
+    );
+  }
+};
 const getSingleSubmittedAssignment = async (req:Request) => {
   const {studentId,id}=req.params
   
@@ -284,5 +307,6 @@ export const AssignmentServices = {
   getAllSubmittedAssignments,
   getSingleSubmittedAssignment,
   getAllInsSubAssignmentsFromDB,
-  postAssignmentMarkToDB
+  postAssignmentMarkToDB,
+  deleteSingleAssignmentFromDB
 };

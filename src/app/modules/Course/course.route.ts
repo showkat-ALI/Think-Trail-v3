@@ -29,5 +29,10 @@ router.get(
   auth(['admin', 'faculty', 'instructor', 'student', 'superAdmin']),
   CourseControllers.getAllCourses,
 );
+router.post(
+  '/chat-with-bot',
+  auth(['admin', 'faculty', 'instructor', 'student', 'superAdmin']),
+  CourseControllers.chatWithBot,
+);
 
 export const CourseRoutes = router;

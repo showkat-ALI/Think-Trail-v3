@@ -48,10 +48,22 @@ const getAllMyCourse = catchAsync(async (req, res) => {
     data: result,
   });
 });
+const chatWithBot = catchAsync(async (req, res) => {
+  // const { id } = req.params;
+  const result = await CourseServices.chatWithCourseBot(req,res);
+
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Course is retrieved succesfully',
+    data: result,
+  });
+});
 
 export const CourseControllers = {
   createCourse,
   getSingleCourse,
   getAllCourses,
-  getAllMyCourse
+  getAllMyCourse,
+  chatWithBot
 };

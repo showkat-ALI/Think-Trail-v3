@@ -10,7 +10,10 @@ import { Module } from '../Module/module.model';
 import { ModuleAssignment, ModuleQuiz, ModuleVideo } from '../ModuleData/module.model';
 import { Assignment } from '../Assignments/assignments.model';
 import { Question, Quiz } from '../Quiz/quiz.model';
-
+import OpenAI from 'openai';
+import config from '../../config';
+const apiKey= config?.api_key
+const openai = new OpenAI({ apiKey });
 const createCourseIntoDB = async (payload: TCourse) => {
   try {
     // Check the number of courses created by the user
@@ -116,10 +119,33 @@ const result = {
 };
   return result;
 };
+const chatWithCourseBot = async(req:Request, res:Response)=>{
+ 
+
+
+  const { message, userId } = req.body;
+
+  // 1. Fetch user-specific data from MongoDB (e.g., courses, deadlines)
+  const userCourses = await Course.find({ userId }); 
+
+  // 2. Generate AI response (with LMS context)
+  const response = await openai.chat.completions.create({
+    model: "gpt-4o",
+    messages: [
+      {
+        role: "system",
+        content: `You are an LMS assistant. User's courses: ${JSON.stringify(userCourses)}`,
+      },
+      { role: "user", content: message },
+    ],
+  });
+res.json({ reply: response.choices[0].message.content });
+};
 
 export const CourseServices = {
   createCourseIntoDB,
   getAllCoursesFromDB,
   getSingleCourseFromDB,
-  getAllmyCourse
+  getAllmyCourse,
+  chatWithCourseBot
 };

@@ -54,6 +54,17 @@ const getSingleAssignment = catchAsync(async (req, res) => {
     data: result,
   });
 });
+const deleteSingleAssignment = catchAsync(async (req, res) => {
+  const {id}=req.params
+  const result =
+    await AssignmentServices.deleteSingleAssignmentFromDB(id);
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    success: true,
+    message: 'Assignment retrived successfully',
+    data: result,
+  });
+});
 const submitAssignment = catchAsync(async (req, res) => {
   const result = await AssignmentServices.submitAssignmentIntoDB(req);
   sendResponse(res, {
@@ -118,5 +129,6 @@ export const AssignmentControllers = {
   getAllSubmittedAssignments,
   getSingleSubmitAssignment,
   getAllInsSubAssignments,
-  postAssignmentMark
+  postAssignmentMark,
+  deleteSingleAssignment
 };

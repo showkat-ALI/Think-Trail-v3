@@ -25,4 +25,5 @@ export default {
   email_user: process.env.EMAIL_USERNAME,
   email_password: process.env.EMAIL_PASSWORD,
   email_from: process.env.EMAIL_FROM,
+  api_key: process.env.OPENAI_KEY
 };
