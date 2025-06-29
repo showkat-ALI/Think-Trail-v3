@@ -14,7 +14,7 @@ import OpenAI from 'openai';
 import { Request, Response } from 'express';
 
 // const apiKey= config?.api_key
-const openai = new OpenAI({ apiKey:"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" });
+const openai = new OpenAI({ apiKey:"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" });
 const createCourseIntoDB = async (payload: TCourse) => {
   try {
     // Check the number of courses created by the user
@@ -130,7 +130,7 @@ const chatWithCourseBot = async(req: Request & { body: { message: string; userId
   // 2. Generate AI response (with LMS context)
   try {
     const response = await openai.chat.completions.create({
-      model: "gpt-3.5-turbo",
+      model: "gpt-4.1",
       messages: [
         {
           role: "system",
@@ -141,6 +141,7 @@ const chatWithCourseBot = async(req: Request & { body: { message: string; userId
     });
     return res.send({ reply: response.choices[0].message.content });
   } catch (error) {
+    console.log(error)
     if ((error as { code?: string }).code === "insufficient_quota") {
       return res.status(429).json({
         success: false,
