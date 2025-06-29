@@ -15,7 +15,6 @@ import { Request, Response } from 'express';
 import config from '../../config';
 
 // const apiKey= config?.api_key
-const unkKey="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"
 const openai = new OpenAI({ apiKey: config.api_key });
 const createCourseIntoDB = async (payload: TCourse) => {
   try {
