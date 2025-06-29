@@ -12,6 +12,8 @@ import { Assignment } from '../Assignments/assignments.model';
 import { Question, Quiz } from '../Quiz/quiz.model';
 import OpenAI from 'openai';
 import config from '../../config';
+import { Request, Response } from 'express';
+
 const apiKey= config?.api_key
 const openai = new OpenAI({ apiKey });
 const createCourseIntoDB = async (payload: TCourse) => {
@@ -119,7 +121,6 @@ const result = {
 };
   return result;
 };
-import { Request, Response } from 'express';
 
 const chatWithCourseBot = async(req: Request & { body: { message: string; userId: string } }, res: Response) => {
   const { message, userId } = req.body;
