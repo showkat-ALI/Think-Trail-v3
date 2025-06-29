@@ -15,7 +15,7 @@ import { Request, Response } from 'express';
 import config from '../../config';
 
 // const apiKey= config?.api_key
-const openai = new OpenAI({ apiKey: config.api_key });
+const openai = new OpenAI({ apiKey: process.env.OPENAI_KEY});
 const createCourseIntoDB = async (payload: TCourse) => {
   try {
     // Check the number of courses created by the user
