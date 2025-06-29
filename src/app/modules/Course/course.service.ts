@@ -119,27 +119,39 @@ const result = {
 };
   return result;
 };
-const chatWithCourseBot = async(req:Request, res:Response)=>{
- 
+import { Request, Response } from 'express';
 
-
+const chatWithCourseBot = async(req: Request & { body: { message: string; userId: string } }, res: Response) => {
   const { message, userId } = req.body;
 
   // 1. Fetch user-specific data from MongoDB (e.g., courses, deadlines)
   const userCourses = await Course.find({ userId }); 
 
   // 2. Generate AI response (with LMS context)
-  const response = await openai.chat.completions.create({
-    model: "gpt-4o",
-    messages: [
-      {
-        role: "system",
-        content: `You are an LMS assistant. User's courses: ${JSON.stringify(userCourses)}`,
-      },
-      { role: "user", content: message },
-    ],
-  });
-res.json({ reply: response.choices[0].message.content });
+  try {
+    const response = await openai.chat.completions.create({
+      model: "gpt-3.5-turbo",
+      messages: [
+        {
+          role: "system",
+          content: `You are an LMS assistant. User's courses: ${JSON.stringify(userCourses)}`,
+        },
+        { role: "user", content: message },
+      ],
+    });
+    return res.send({ reply: response.choices[0].message.content });
+  } catch (error) {
+    if ((error as { code?: string }).code === "insufficient_quota") {
+      return res.status(429).json({
+        success: false,
+        message: "You have exceeded your quota. Please check your plan and billing details.",
+      });
+    }
+    return res.status(500).json({
+      success: false,
+      message: "An error occurred while processing your request.",
+    });
+  }
 };
 
 export const CourseServices = {
