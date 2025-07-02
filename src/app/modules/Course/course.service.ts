@@ -14,7 +14,7 @@ import OpenAI from 'openai';
 import { Request, Response } from 'express';
 
 // const apiKey= config?.api_key
-const openai = new OpenAI({ apiKey:"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" });
+const openai = new OpenAI({ apiKey:process.env.OPENAI_KEY });
 const createCourseIntoDB = async (payload: TCourse) => {
   try {
     // Check the number of courses created by the user
@@ -121,36 +121,61 @@ const result = {
   return result;
 };
 
-const chatWithCourseBot = async(req: Request & { body: { message: string; userId: string } }, res: Response) => {
+const chatWithCourseBot = async (req: Request & { body: { message: string; userId: string } }, res: Response) => {
   const { message, userId } = req.body;
 
-  // 1. Fetch user-specific data from MongoDB (e.g., courses, deadlines)
-  const userCourses = await Course.find({ userId }); 
+  // Input validation
+  if (!message || !userId) {
+    return res.status(400).json({
+      success: false,
+      message: "Both message and userId are required",
+    });
+  }
 
-  // 2. Generate AI response (with LMS context)
   try {
+    // 1. Fetch user data
+    const userCourses = await Course.find({ userId });
+    
+    // 2. Call OpenAI API
     const response = await openai.chat.completions.create({
-      model: "gpt-4.1",
+      model: "gpt-3.5-turbo", // Default working model
       messages: [
         {
           role: "system",
-          content: `You are an LMS assistant. User's courses: ${JSON.stringify(userCourses)}`,
+          content: `You are an LMS assistant. User is enrolled in: ${userCourses.map(c => c.name).join(', ')}`,
         },
         { role: "user", content: message },
       ],
+      temperature: 0.7,
+      max_tokens: 500,
     });
-    return res.send({ reply: response.choices[0].message.content });
+
+    return res.json({
+      success: true,
+      reply: response.choices[0].message.content,
+    });
+
   } catch (error) {
-    console.log(error)
-    if ((error as { code?: string }).code === "insufficient_quota") {
-      return res.status(429).json({
+    console.error("API Error:", error);
+    
+    // Handle specific OpenAI errors
+    if (error instanceof OpenAI.APIError) {
+      if (error.status === 404) {
+        return res.status(404).json({
+          success: false,
+          message: "The requested AI model is not available. Please try a different model.",
+        });
+      }
+      return res.status(error.status || 500).json({
         success: false,
-        message: "You have exceeded your quota. Please check your plan and billing details.",
+        message: error.message,
       });
     }
+
+    // Generic error handler
     return res.status(500).json({
       success: false,
-      message: "An error occurred while processing your request.",
+      message: "Internal server error",
     });
   }
 };
