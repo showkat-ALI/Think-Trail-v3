@@ -138,7 +138,7 @@ const chatWithCourseBot = async (req: Request & { body: { message: string; userI
     
     // 2. Call OpenAI API
     const response = await openai.chat.completions.create({
-      model: "gpt-3.5-turbo", // Default working model
+      model: "gpt-3.5-turbo-16k-0613", // Default working model
       messages: [
         {
           role: "system",
