@@ -142,7 +142,7 @@ const chatWithCourseBot = async (req: Request & { body: { message: string; userI
       messages: [
         {
           role: "system",
-          content: `You are an LMS assistant. User is enrolled in: ${userCourses.map(c => c.name).join(', ')}`,
+          content: `You are an LMS assistant. User is enrolled in: ${userCourses.map(c => c.title).join(', ')}`,
         },
         { role: "user", content: message },
       ],
